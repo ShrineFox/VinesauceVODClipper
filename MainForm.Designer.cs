@@ -175,8 +175,10 @@
             txt_TxtFile.BorderStyle = BorderStyle.FixedSingle;
             txt_TxtFile.Location = new Point(3, 4);
             txt_TxtFile.Name = "txt_TxtFile";
+            txt_TxtFile.ReadOnly = true;
             txt_TxtFile.Size = new Size(624, 27);
             txt_TxtFile.TabIndex = 0;
+            txt_TxtFile.Click += TxtBtn_Click;
             txt_TxtFile.TextChanged += Txt_Changed;
             // 
             // btn_TxtFile
@@ -236,7 +238,7 @@
             tlp_VideoList.RowStyles.Add(new RowStyle());
             tlp_VideoList.RowStyles.Add(new RowStyle());
             tlp_VideoList.RowStyles.Add(new RowStyle());
-            tlp_VideoList.Size = new Size(764, 22);
+            tlp_VideoList.Size = new Size(762, 22);
             tlp_VideoList.TabIndex = 0;
             // 
             // lbl_VideoPath
@@ -279,7 +281,7 @@
             lbl_EndTime.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_EndTime.Location = new Point(656, 1);
             lbl_EndTime.Name = "lbl_EndTime";
-            lbl_EndTime.Size = new Size(104, 20);
+            lbl_EndTime.Size = new Size(102, 20);
             lbl_EndTime.TabIndex = 8;
             lbl_EndTime.Text = "End Time";
             // 

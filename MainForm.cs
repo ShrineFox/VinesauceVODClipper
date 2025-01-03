@@ -22,51 +22,76 @@ namespace VinesauceVODClipper
 
             if (File.Exists(txtPath))
             {
+                // Exit early if the user doesn't want to overwrite video list
+                if (videoList.Count > 0 && !WinFormsDialogs.ShowMessageBox(
+                    "Overwrite Video List Form","Changing the input text file will reset the video list below. " +
+                    "Do you want to continue?", MessageBoxButtons.YesNo))
+                {
+                    return;
+                }
+
                 // Remove existing entries from video list
                 videoList.Clear();
 
                 var txtLines = File.ReadAllLines(txtPath);
 
+                // Create new video list
                 for (int i = 0; i < txtLines.Length; i++)
                 {
-                    var splitLines = txtLines[i].Trim().Split(' ');
+                    var splitLine = txtLines[i].Trim().Split(' ');
 
-                    if (splitLines.Length < 3)
+                    if (splitLine.Length < 3)
                         Output.Log($"Syntax error on line {i + 1}: Missing timestamp?\r\n\t{txtLines[i]}", ConsoleColor.Yellow);
                     else
                     {
                         Video video = new Video();
 
                         // Attempt to get timestamps from .txt line
+                        string startTime = TimestampStringToHourFormat(splitLine[splitLine.Length - 2]);
                         try
                         {
-                            video.EndTime = Convert.ToDateTime(splitLines.Last());
+                            video.StartTime = TimeSpan.Parse(startTime);
                         }
                         catch
                         {
-                            Output.Log($"Syntax error on line {i + 1}: Invalid End Time timestamp.\r\n\t{txtLines[i]}", ConsoleColor.Yellow);
+                            Output.Log($"Syntax error on line {i + 1}: Invalid Start Time timestamp: \"{startTime}\"" +
+                                $"\r\nFormat must be hh:mm:ss", ConsoleColor.Yellow);
                         }
+                        string endTime = TimestampStringToHourFormat(splitLine.Last());
                         try
                         {
-                            video.StartTime = Convert.ToDateTime(splitLines[splitLines.Length - 2]);
+                            video.EndTime = TimeSpan.Parse(endTime);
                         }
                         catch
                         {
-                            Output.Log($"Syntax error on line {i + 1}: Invalid Start Time timestamp.\r\n\t{txtLines[i]}", ConsoleColor.Yellow);
+                            Output.Log($"Syntax error on line {i + 1}: Invalid End Time timestamp: \"{endTime}\"" +
+                                $"\r\nFormat must be hh:mm:ss", ConsoleColor.Yellow);
                         }
 
                         // Join all strings except the last two timestamps to create Title
-                        video.Title = string.Join(" ", splitLines, 0, splitLines.Length - 2);
-                            videoList.Add(video);
-                        }
+                        video.Title = string.Join(" ", splitLine, 0, splitLine.Length - 2);
+                        videoList.Add(video);
                     }
                 }
 
+                // Update form with video list
                 if (videoList.Count > 0)
                 {
                     CreateVideoListControls();
                 }
+
+                Output.Log($"Done reading {videoList.Count} entries from file:\r\n\t{txtPath}", ConsoleColor.Green);
             }
+        }
+
+        private string TimestampStringToHourFormat(string timeStamp)
+        {
+            if (timeStamp.Split(':').Length == 2)
+            {
+                // Add hours to timestamp if missing
+                return "00:" + timeStamp;
+            }
+            return timeStamp;
         }
 
         private void CreateVideoListControls()
@@ -77,6 +102,9 @@ namespace VinesauceVODClipper
             {
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 AutoSize = true,
+                AutoScroll = false,
+                Size = new Size(762, 22),
+                Location = new Point(0, 0),
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 CellBorderStyle = TableLayoutPanelCellBorderStyle.Single,
                 Name = "tlp_VideoList"
@@ -101,11 +129,11 @@ namespace VinesauceVODClipper
             for (int i = 0; i < videoList.Count; i++)
             {
                 tlp_VideoList.RowStyles.Add(new RowStyle());
-                Label lbl_VideoTitle = new Label() { Text = videoList[i].Title, Name = $"lbl_VideoTitle_{i}" };
+                Label lbl_VideoTitle = new Label() { Text = videoList[i].Title, Dock = DockStyle.Fill, Name = $"lbl_VideoTitle_{i}" };
                 TextBox txt_VideoPath = new TextBox() { Text = "", Dock = DockStyle.Fill, Name = $"txt_VideoPath_{i}" };
                 Button btn_VideoPath = new Button() { Text = "...", Dock = DockStyle.Fill, Name = $"btn_VideoPath_{i}" };
-                TextBox txt_StartTime = new TextBox() { Text = videoList[i].StartTime.ToString("hh:mm:ss"), Dock = DockStyle.Fill, Name = $"txt_StartTime_{i}" };
-                TextBox txt_EndTime = new TextBox() { Text = videoList[i].EndTime.ToString("hh:mm:ss"), Dock = DockStyle.Fill, Name = $"txt_EndTime_{i}" };
+                TextBox txt_StartTime = new TextBox() { Text = videoList[i].StartTime.ToString(@"hh\:mm\:ss"), Dock = DockStyle.Fill, Name = $"txt_StartTime_{i}" };
+                TextBox txt_EndTime = new TextBox() { Text = videoList[i].EndTime.ToString(@"hh\:mm\:ss"), Dock = DockStyle.Fill, Name = $"txt_EndTime_{i}" };
                 tlp_VideoList.Controls.Add(lbl_VideoTitle, 0, i + 1);
                 tlp_VideoList.Controls.Add(txt_VideoPath, 1, i + 1);
                 tlp_VideoList.Controls.Add(btn_VideoPath, 2, i + 1);
@@ -120,7 +148,7 @@ namespace VinesauceVODClipper
         // Browse for .txt file
         private void TxtBtn_Click(object sender, EventArgs e)
         {
-            var selectedFiles = WinFormsDialogs.SelectFile("Choose .txt with Timestamps", false, "Text Document (.txt)");
+            var selectedFiles = WinFormsDialogs.SelectFile("Choose .txt with Timestamps", false, new string[] { "Text Document (.txt)" });
             if (selectedFiles.Count > 0 && File.Exists(selectedFiles.First()))
             {
                 txt_TxtFile.Text = selectedFiles.First();
@@ -144,7 +172,7 @@ namespace VinesauceVODClipper
     {
         public string Title { get; set; } = "";
         public string Path { get; set; } = "";
-        public DateTime StartTime { get; set; } = new DateTime();
-        public DateTime EndTime { get; set; } = new DateTime();
+        public TimeSpan StartTime { get; set; } = new TimeSpan(hours: 0, minutes: 0, seconds: 0);
+        public TimeSpan EndTime { get; set; } = new TimeSpan(hours: 0, minutes: 0, seconds: 0);
     }
 }
