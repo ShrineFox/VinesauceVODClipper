@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             tlp_Main = new TableLayoutPanel();
+            rtb_Log = new RichTextBox();
             groupBox_ClipsDir = new GroupBox();
             tlp_ClipsDir = new TableLayoutPanel();
             txt_ClipsDir = new TextBox();
@@ -41,13 +42,12 @@
             groupBox_VideoList = new GroupBox();
             pnl_VideoList = new Panel();
             tlp_VideoList = new TableLayoutPanel();
-            lbl_Title = new Label();
-            rtb_Instructions = new RichTextBox();
             lbl_VideoPath = new Label();
+            lbl_Title = new Label();
             lbl_StartTime = new Label();
             lbl_EndTime = new Label();
+            rtb_Instructions = new RichTextBox();
             btn_CreateClips = new Button();
-            rtb_Log = new RichTextBox();
             tlp_Main.SuspendLayout();
             groupBox_ClipsDir.SuspendLayout();
             tlp_ClipsDir.SuspendLayout();
@@ -81,6 +81,19 @@
             tlp_Main.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tlp_Main.Size = new Size(800, 450);
             tlp_Main.TabIndex = 0;
+            // 
+            // rtb_Log
+            // 
+            rtb_Log.BackColor = SystemColors.MenuBar;
+            rtb_Log.BorderStyle = BorderStyle.None;
+            rtb_Log.Dock = DockStyle.Fill;
+            rtb_Log.ForeColor = Color.Gray;
+            rtb_Log.Location = new Point(3, 406);
+            rtb_Log.Name = "rtb_Log";
+            rtb_Log.ReadOnly = true;
+            rtb_Log.Size = new Size(674, 41);
+            rtb_Log.TabIndex = 8;
+            rtb_Log.Text = "Created by ShrineFox";
             // 
             // groupBox_ClipsDir
             // 
@@ -127,6 +140,7 @@
             btn_ClipsDir.TabIndex = 1;
             btn_ClipsDir.Text = ". . .";
             btn_ClipsDir.UseVisualStyleBackColor = true;
+            btn_ClipsDir.Click += OutputDirBtn_Click;
             // 
             // groupBox_TxtFile
             // 
@@ -163,6 +177,7 @@
             txt_TxtFile.Name = "txt_TxtFile";
             txt_TxtFile.Size = new Size(624, 27);
             txt_TxtFile.TabIndex = 0;
+            txt_TxtFile.TextChanged += Txt_Changed;
             // 
             // btn_TxtFile
             // 
@@ -173,6 +188,7 @@
             btn_TxtFile.TabIndex = 1;
             btn_TxtFile.Text = ". . .";
             btn_TxtFile.UseVisualStyleBackColor = true;
+            btn_TxtFile.Click += TxtBtn_Click;
             // 
             // groupBox_VideoList
             // 
@@ -220,8 +236,19 @@
             tlp_VideoList.RowStyles.Add(new RowStyle());
             tlp_VideoList.RowStyles.Add(new RowStyle());
             tlp_VideoList.RowStyles.Add(new RowStyle());
-            tlp_VideoList.Size = new Size(775, 22);
+            tlp_VideoList.Size = new Size(764, 22);
             tlp_VideoList.TabIndex = 0;
+            // 
+            // lbl_VideoPath
+            // 
+            lbl_VideoPath.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            lbl_VideoPath.AutoSize = true;
+            lbl_VideoPath.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lbl_VideoPath.Location = new Point(293, 1);
+            lbl_VideoPath.Name = "lbl_VideoPath";
+            lbl_VideoPath.Size = new Size(174, 20);
+            lbl_VideoPath.TabIndex = 6;
+            lbl_VideoPath.Text = "Video Path";
             // 
             // lbl_Title
             // 
@@ -230,9 +257,31 @@
             lbl_Title.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_Title.Location = new Point(4, 1);
             lbl_Title.Name = "lbl_Title";
-            lbl_Title.Size = new Size(286, 20);
+            lbl_Title.Size = new Size(282, 20);
             lbl_Title.TabIndex = 5;
             lbl_Title.Text = "Video Title";
+            // 
+            // lbl_StartTime
+            // 
+            lbl_StartTime.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            lbl_StartTime.AutoSize = true;
+            lbl_StartTime.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lbl_StartTime.Location = new Point(547, 1);
+            lbl_StartTime.Name = "lbl_StartTime";
+            lbl_StartTime.Size = new Size(102, 20);
+            lbl_StartTime.TabIndex = 7;
+            lbl_StartTime.Text = "Start Time";
+            // 
+            // lbl_EndTime
+            // 
+            lbl_EndTime.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            lbl_EndTime.AutoSize = true;
+            lbl_EndTime.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lbl_EndTime.Location = new Point(656, 1);
+            lbl_EndTime.Name = "lbl_EndTime";
+            lbl_EndTime.Size = new Size(104, 20);
+            lbl_EndTime.TabIndex = 8;
+            lbl_EndTime.Text = "End Time";
             // 
             // rtb_Instructions
             // 
@@ -248,39 +297,6 @@
             rtb_Instructions.TabIndex = 6;
             rtb_Instructions.Text = "Instructions:\n- Drag Raw VOD files onto matching video names below.\n- Create Clips to generate shortened videos in Output folder.";
             // 
-            // lbl_VideoPath
-            // 
-            lbl_VideoPath.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            lbl_VideoPath.AutoSize = true;
-            lbl_VideoPath.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbl_VideoPath.Location = new Point(297, 1);
-            lbl_VideoPath.Name = "lbl_VideoPath";
-            lbl_VideoPath.Size = new Size(177, 20);
-            lbl_VideoPath.TabIndex = 6;
-            lbl_VideoPath.Text = "Video Path";
-            // 
-            // lbl_StartTime
-            // 
-            lbl_StartTime.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            lbl_StartTime.AutoSize = true;
-            lbl_StartTime.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbl_StartTime.Location = new Point(555, 1);
-            lbl_StartTime.Name = "lbl_StartTime";
-            lbl_StartTime.Size = new Size(103, 20);
-            lbl_StartTime.TabIndex = 7;
-            lbl_StartTime.Text = "Start Time";
-            // 
-            // lbl_EndTime
-            // 
-            lbl_EndTime.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            lbl_EndTime.AutoSize = true;
-            lbl_EndTime.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbl_EndTime.Location = new Point(665, 1);
-            lbl_EndTime.Name = "lbl_EndTime";
-            lbl_EndTime.Size = new Size(106, 20);
-            lbl_EndTime.TabIndex = 8;
-            lbl_EndTime.Text = "End Time";
-            // 
             // btn_CreateClips
             // 
             btn_CreateClips.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
@@ -291,19 +307,7 @@
             btn_CreateClips.TabIndex = 7;
             btn_CreateClips.Text = "Create Clips";
             btn_CreateClips.UseVisualStyleBackColor = true;
-            // 
-            // rtb_Log
-            // 
-            rtb_Log.BackColor = SystemColors.MenuBar;
-            rtb_Log.BorderStyle = BorderStyle.None;
-            rtb_Log.Dock = DockStyle.Fill;
-            rtb_Log.ForeColor = Color.Gray;
-            rtb_Log.Location = new Point(3, 406);
-            rtb_Log.Name = "rtb_Log";
-            rtb_Log.ReadOnly = true;
-            rtb_Log.Size = new Size(674, 41);
-            rtb_Log.TabIndex = 8;
-            rtb_Log.Text = "Created by ShrineFox";
+            btn_CreateClips.Click += CreateClipsBtn_Click;
             // 
             // MainForm
             // 

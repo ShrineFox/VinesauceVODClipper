@@ -13,4 +13,8 @@
     <Content Include="vineshroom.ico" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ShrineFox.IO\ShrineFox.IO.csproj" />
+  </ItemGroup>
+
 </Project>
