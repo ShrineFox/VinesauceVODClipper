@@ -130,6 +130,7 @@
             txt_ClipsDir.Name = "txt_ClipsDir";
             txt_ClipsDir.Size = new Size(624, 27);
             txt_ClipsDir.TabIndex = 0;
+            txt_ClipsDir.TextChanged += OutputDirTxt_Changed;
             // 
             // btn_ClipsDir
             // 
@@ -216,7 +217,7 @@
             // 
             // tlp_VideoList
             // 
-            tlp_VideoList.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tlp_VideoList.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tlp_VideoList.AutoSize = true;
             tlp_VideoList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tlp_VideoList.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
@@ -302,6 +303,7 @@
             // btn_CreateClips
             // 
             btn_CreateClips.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            btn_CreateClips.Enabled = false;
             btn_CreateClips.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_CreateClips.Location = new Point(688, 406);
             btn_CreateClips.Name = "btn_CreateClips";
