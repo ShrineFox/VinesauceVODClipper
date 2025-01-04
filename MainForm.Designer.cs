@@ -48,6 +48,9 @@
             lbl_EndTime = new Label();
             rtb_Instructions = new RichTextBox();
             btn_CreateClips = new Button();
+            menuStrip1 = new MenuStrip();
+            toolsToolStripMenuItem = new ToolStripMenuItem();
+            reEncodeClipsToolStripMenuItem = new ToolStripMenuItem();
             tlp_Main.SuspendLayout();
             groupBox_ClipsDir.SuspendLayout();
             tlp_ClipsDir.SuspendLayout();
@@ -56,6 +59,7 @@
             groupBox_VideoList.SuspendLayout();
             pnl_VideoList.SuspendLayout();
             tlp_VideoList.SuspendLayout();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // tlp_Main
@@ -71,7 +75,7 @@
             tlp_Main.Controls.Add(rtb_Instructions, 0, 2);
             tlp_Main.Controls.Add(btn_CreateClips, 1, 4);
             tlp_Main.Dock = DockStyle.Fill;
-            tlp_Main.Location = new Point(0, 0);
+            tlp_Main.Location = new Point(0, 28);
             tlp_Main.Name = "tlp_Main";
             tlp_Main.RowCount = 5;
             tlp_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 15F));
@@ -80,7 +84,7 @@
             tlp_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 45F));
             tlp_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tlp_Main.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tlp_Main.Size = new Size(800, 450);
+            tlp_Main.Size = new Size(1036, 530);
             tlp_Main.TabIndex = 0;
             // 
             // rtb_Log
@@ -89,10 +93,10 @@
             rtb_Log.BorderStyle = BorderStyle.None;
             rtb_Log.Dock = DockStyle.Fill;
             rtb_Log.ForeColor = Color.Gray;
-            rtb_Log.Location = new Point(3, 406);
+            rtb_Log.Location = new Point(3, 478);
             rtb_Log.Name = "rtb_Log";
             rtb_Log.ReadOnly = true;
-            rtb_Log.Size = new Size(674, 41);
+            rtb_Log.Size = new Size(874, 49);
             rtb_Log.TabIndex = 8;
             rtb_Log.Text = "Created by ShrineFox";
             // 
@@ -101,9 +105,9 @@
             tlp_Main.SetColumnSpan(groupBox_ClipsDir, 2);
             groupBox_ClipsDir.Controls.Add(tlp_ClipsDir);
             groupBox_ClipsDir.Dock = DockStyle.Fill;
-            groupBox_ClipsDir.Location = new Point(3, 70);
+            groupBox_ClipsDir.Location = new Point(3, 82);
             groupBox_ClipsDir.Name = "groupBox_ClipsDir";
-            groupBox_ClipsDir.Size = new Size(794, 61);
+            groupBox_ClipsDir.Size = new Size(1030, 73);
             groupBox_ClipsDir.TabIndex = 5;
             groupBox_ClipsDir.TabStop = false;
             groupBox_ClipsDir.Text = "Output Clips Directory";
@@ -120,7 +124,7 @@
             tlp_ClipsDir.Name = "tlp_ClipsDir";
             tlp_ClipsDir.RowCount = 1;
             tlp_ClipsDir.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlp_ClipsDir.Size = new Size(788, 35);
+            tlp_ClipsDir.Size = new Size(1024, 47);
             tlp_ClipsDir.TabIndex = 0;
             // 
             // txt_ClipsDir
@@ -128,9 +132,9 @@
             txt_ClipsDir.AllowDrop = true;
             txt_ClipsDir.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             txt_ClipsDir.BorderStyle = BorderStyle.FixedSingle;
-            txt_ClipsDir.Location = new Point(3, 4);
+            txt_ClipsDir.Location = new Point(3, 10);
             txt_ClipsDir.Name = "txt_ClipsDir";
-            txt_ClipsDir.Size = new Size(624, 27);
+            txt_ClipsDir.Size = new Size(813, 27);
             txt_ClipsDir.TabIndex = 0;
             txt_ClipsDir.TextChanged += OutputDirTxt_Changed;
             txt_ClipsDir.DragDrop += ClipsDir_DragDrop;
@@ -140,9 +144,9 @@
             // 
             btn_ClipsDir.AllowDrop = true;
             btn_ClipsDir.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            btn_ClipsDir.Location = new Point(633, 4);
+            btn_ClipsDir.Location = new Point(822, 11);
             btn_ClipsDir.Name = "btn_ClipsDir";
-            btn_ClipsDir.Size = new Size(152, 27);
+            btn_ClipsDir.Size = new Size(199, 25);
             btn_ClipsDir.TabIndex = 1;
             btn_ClipsDir.Text = ". . .";
             btn_ClipsDir.UseVisualStyleBackColor = true;
@@ -157,7 +161,7 @@
             groupBox_TxtFile.Dock = DockStyle.Fill;
             groupBox_TxtFile.Location = new Point(3, 3);
             groupBox_TxtFile.Name = "groupBox_TxtFile";
-            groupBox_TxtFile.Size = new Size(794, 61);
+            groupBox_TxtFile.Size = new Size(1030, 73);
             groupBox_TxtFile.TabIndex = 0;
             groupBox_TxtFile.TabStop = false;
             groupBox_TxtFile.Text = ".Txt File With Timestamps";
@@ -174,7 +178,7 @@
             tlp_TxtFile.Name = "tlp_TxtFile";
             tlp_TxtFile.RowCount = 1;
             tlp_TxtFile.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlp_TxtFile.Size = new Size(788, 35);
+            tlp_TxtFile.Size = new Size(1024, 47);
             tlp_TxtFile.TabIndex = 0;
             // 
             // txt_TxtFile
@@ -182,10 +186,10 @@
             txt_TxtFile.AllowDrop = true;
             txt_TxtFile.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             txt_TxtFile.BorderStyle = BorderStyle.FixedSingle;
-            txt_TxtFile.Location = new Point(3, 4);
+            txt_TxtFile.Location = new Point(3, 10);
             txt_TxtFile.Name = "txt_TxtFile";
             txt_TxtFile.ReadOnly = true;
-            txt_TxtFile.Size = new Size(624, 27);
+            txt_TxtFile.Size = new Size(813, 27);
             txt_TxtFile.TabIndex = 0;
             txt_TxtFile.Click += TxtBtn_Click;
             txt_TxtFile.TextChanged += Txt_Changed;
@@ -196,9 +200,9 @@
             // 
             btn_TxtFile.AllowDrop = true;
             btn_TxtFile.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            btn_TxtFile.Location = new Point(633, 3);
+            btn_TxtFile.Location = new Point(822, 11);
             btn_TxtFile.Name = "btn_TxtFile";
-            btn_TxtFile.Size = new Size(152, 29);
+            btn_TxtFile.Size = new Size(199, 25);
             btn_TxtFile.TabIndex = 1;
             btn_TxtFile.Text = ". . .";
             btn_TxtFile.UseVisualStyleBackColor = true;
@@ -211,9 +215,9 @@
             tlp_Main.SetColumnSpan(groupBox_VideoList, 2);
             groupBox_VideoList.Controls.Add(pnl_VideoList);
             groupBox_VideoList.Dock = DockStyle.Fill;
-            groupBox_VideoList.Location = new Point(3, 204);
+            groupBox_VideoList.Location = new Point(3, 240);
             groupBox_VideoList.Name = "groupBox_VideoList";
-            groupBox_VideoList.Size = new Size(794, 196);
+            groupBox_VideoList.Size = new Size(1030, 232);
             groupBox_VideoList.TabIndex = 4;
             groupBox_VideoList.TabStop = false;
             groupBox_VideoList.Text = "Videos to Generate Clips From";
@@ -226,7 +230,7 @@
             pnl_VideoList.Dock = DockStyle.Fill;
             pnl_VideoList.Location = new Point(3, 23);
             pnl_VideoList.Name = "pnl_VideoList";
-            pnl_VideoList.Size = new Size(788, 170);
+            pnl_VideoList.Size = new Size(1024, 206);
             pnl_VideoList.TabIndex = 0;
             // 
             // tlp_VideoList
@@ -253,7 +257,7 @@
             tlp_VideoList.RowStyles.Add(new RowStyle());
             tlp_VideoList.RowStyles.Add(new RowStyle());
             tlp_VideoList.RowStyles.Add(new RowStyle());
-            tlp_VideoList.Size = new Size(762, 22);
+            tlp_VideoList.Size = new Size(995, 22);
             tlp_VideoList.TabIndex = 0;
             // 
             // lbl_VideoPath
@@ -261,9 +265,9 @@
             lbl_VideoPath.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             lbl_VideoPath.AutoSize = true;
             lbl_VideoPath.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbl_VideoPath.Location = new Point(293, 1);
+            lbl_VideoPath.Location = new Point(381, 1);
             lbl_VideoPath.Name = "lbl_VideoPath";
-            lbl_VideoPath.Size = new Size(174, 20);
+            lbl_VideoPath.Size = new Size(229, 20);
             lbl_VideoPath.TabIndex = 6;
             lbl_VideoPath.Text = "Video Path";
             // 
@@ -274,7 +278,7 @@
             lbl_Title.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_Title.Location = new Point(4, 1);
             lbl_Title.Name = "lbl_Title";
-            lbl_Title.Size = new Size(282, 20);
+            lbl_Title.Size = new Size(370, 20);
             lbl_Title.TabIndex = 5;
             lbl_Title.Text = "Video Title";
             // 
@@ -283,9 +287,9 @@
             lbl_StartTime.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             lbl_StartTime.AutoSize = true;
             lbl_StartTime.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbl_StartTime.Location = new Point(547, 1);
+            lbl_StartTime.Location = new Point(712, 1);
             lbl_StartTime.Name = "lbl_StartTime";
-            lbl_StartTime.Size = new Size(102, 20);
+            lbl_StartTime.Size = new Size(135, 20);
             lbl_StartTime.TabIndex = 7;
             lbl_StartTime.Text = "Start Time";
             // 
@@ -294,9 +298,9 @@
             lbl_EndTime.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             lbl_EndTime.AutoSize = true;
             lbl_EndTime.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbl_EndTime.Location = new Point(656, 1);
+            lbl_EndTime.Location = new Point(854, 1);
             lbl_EndTime.Name = "lbl_EndTime";
-            lbl_EndTime.Size = new Size(102, 20);
+            lbl_EndTime.Size = new Size(137, 20);
             lbl_EndTime.TabIndex = 8;
             lbl_EndTime.Text = "End Time";
             // 
@@ -307,10 +311,10 @@
             tlp_Main.SetColumnSpan(rtb_Instructions, 2);
             rtb_Instructions.Dock = DockStyle.Fill;
             rtb_Instructions.ForeColor = Color.DimGray;
-            rtb_Instructions.Location = new Point(3, 137);
+            rtb_Instructions.Location = new Point(3, 161);
             rtb_Instructions.Name = "rtb_Instructions";
             rtb_Instructions.ReadOnly = true;
-            rtb_Instructions.Size = new Size(794, 61);
+            rtb_Instructions.Size = new Size(1030, 73);
             rtb_Instructions.TabIndex = 6;
             rtb_Instructions.Text = "Instructions:\n- Load a .txt file with each line matching the following format:\n[Vinesauce] Vinny - Video Title 00:00:00 01:59:59";
             // 
@@ -319,22 +323,48 @@
             btn_CreateClips.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             btn_CreateClips.Enabled = false;
             btn_CreateClips.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btn_CreateClips.Location = new Point(688, 406);
+            btn_CreateClips.Location = new Point(924, 478);
             btn_CreateClips.Name = "btn_CreateClips";
-            btn_CreateClips.Size = new Size(109, 41);
+            btn_CreateClips.Size = new Size(109, 49);
             btn_CreateClips.TabIndex = 7;
             btn_CreateClips.Text = "Create Clips";
             btn_CreateClips.UseVisualStyleBackColor = true;
             btn_CreateClips.Click += CreateClipsBtn_Click;
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.ImageScalingSize = new Size(20, 20);
+            menuStrip1.Items.AddRange(new ToolStripItem[] { toolsToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1036, 28);
+            menuStrip1.TabIndex = 1;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // toolsToolStripMenuItem
+            // 
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { reEncodeClipsToolStripMenuItem });
+            toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            toolsToolStripMenuItem.Size = new Size(58, 24);
+            toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // reEncodeClipsToolStripMenuItem
+            // 
+            reEncodeClipsToolStripMenuItem.Name = "reEncodeClipsToolStripMenuItem";
+            reEncodeClipsToolStripMenuItem.Size = new Size(200, 26);
+            reEncodeClipsToolStripMenuItem.Text = "Re-Encode Clips";
+            reEncodeClipsToolStripMenuItem.Click += ReEncodeClips_Clicked;
             // 
             // MainForm
             // 
             AllowDrop = true;
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1036, 558);
             Controls.Add(tlp_Main);
+            Controls.Add(menuStrip1);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = menuStrip1;
             Name = "MainForm";
             Text = "Vinesauce VOD Clipper";
             tlp_Main.ResumeLayout(false);
@@ -349,7 +379,10 @@
             pnl_VideoList.PerformLayout();
             tlp_VideoList.ResumeLayout(false);
             tlp_VideoList.PerformLayout();
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -396,5 +429,8 @@
         private TextBox textBox9;
         private Button button4;
         private Button button5;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem toolsToolStripMenuItem;
+        private ToolStripMenuItem reEncodeClipsToolStripMenuItem;
     }
 }

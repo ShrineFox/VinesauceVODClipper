@@ -1,14 +1,17 @@
 using ShrineFox.IO;
+using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
 
 namespace VinesauceVODClipper
 {
     public partial class MainForm : Form
     {
         public List<Video> videoList = new List<Video>();
+        string ffmpegPath = "";
 
         public MainForm()
         {
             InitializeComponent();
+            ffmpegPath = Path.Combine(Exe.Directory(), "Dependencies//ffmpeg.exe");
             // Set up error logging
             Output.LogPath = "log.txt";
             Output.LogControl = rtb_Log;
@@ -240,10 +243,9 @@ namespace VinesauceVODClipper
 
         private void CreateClips()
         {
-            string ffmpegPath = Path.Combine(Exe.Directory(), "Dependencies//ffmpeg.exe");
             if (!File.Exists(ffmpegPath))
             {
-                string errorText = $"Could not find ffmpeg.exe at path:\n\t\"{ffmpegPath}\"";
+                string errorText = $"Clip creation failed. Could not find ffmpeg.exe at path:\n\t\"{ffmpegPath}\"";
                 Output.Log(errorText, ConsoleColor.Red);
                 MessageBox.Show(errorText);
                 return;
@@ -256,7 +258,8 @@ namespace VinesauceVODClipper
                 string outputFilePath = FileSys.CreateUniqueFilePath(Path.Combine(txt_ClipsDir.Text, video.Title) + Path.GetExtension(video.Path));
 
                 // Create clip from video in output directory without re-encoding
-                string args = $"-i \"{video.Path}\" -copyts -ss {video.StartTime} -to {video.EndTime} -map 0 -c copy \"{outputFilePath}\"";
+                string args = $"-i \"{video.Path}\" -ss {video.StartTime} -to {video.EndTime} -map 0 -c copy -avoid_negative_ts make_zero \"{outputFilePath}\"";
+
                 Output.Log($"Running ffmpeg with args:\n\t{args}");
                 Exe.Run(ffmpegPath, args, hideWindow: false);
                 using (FileSys.WaitForFile(outputFilePath)) { };
@@ -352,6 +355,42 @@ namespace VinesauceVODClipper
                 return;
 
             txt_ClipsDir.Text = files.First();
+        }
+
+        // Select video files to re-encode
+        private void ReEncodeClips_Clicked(object sender, EventArgs e)
+        {
+            if (!File.Exists(ffmpegPath))
+            {
+                string errorText = $"Clip re-encoding failed. Could not find ffmpeg.exe at path:\n\t\"{ffmpegPath}\"";
+                Output.Log(errorText, ConsoleColor.Red);
+                MessageBox.Show(errorText);
+                return;
+            }
+
+            var selectedFiles = WinFormsDialogs.SelectFile("Choose video clips to re-encode", true);
+            if (selectedFiles.Count > 0)
+            {
+                foreach(var file in selectedFiles)
+                {
+                    string outputFilePath = FileSys.CreateUniqueFilePath(Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file)) + " (Re-Encoded)" + Path.GetExtension(file));
+                    string args = $"-i \"{file}\"  -y -map 0 -c copy -c:a aac \"{outputFilePath}\"";
+                    Output.Log($"Running ffmpeg with args:\n\t{args}");
+                    Exe.Run(ffmpegPath, args, hideWindow: false);
+                    using (FileSys.WaitForFile(outputFilePath)) { };
+                    // Let user know if task succeeded or not
+                    if (!File.Exists(outputFilePath))
+                    {
+                        Output.Log($"Failed to re-encode Clip: \"{outputFilePath}\"", ConsoleColor.Red);
+                    }
+                    else
+                    {
+                        Output.Log($"Clip re-encoded: \"{outputFilePath}\"", ConsoleColor.Green);
+                    }
+                }
+            }
+
+            Output.Log("Done re-encoding clips.");
         }
     }
 
