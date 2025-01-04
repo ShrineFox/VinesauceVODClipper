@@ -29,8 +29,15 @@ Vinny - Mario 64 in Minecraft, Sonic, Doom, TF2, Blender, etc.. 1:12:00 1:13:26
 - Upload the clips to Google Drive and then you're done.
 
 ## How it works
-Basically, ffmpeg snips all the audio and video tracks between the specified timestamps and saves them to a new file. The data is more or less unaltered, however it will try to adjust the timestamps of the new file so that it doesn't confuse video players/editors.  
+Basically, ffmpeg snips all the audio and video tracks between the specified timestamps and saves them to a new file. The data is more or less unaltered, thus preserving video quality.  
 This doesn't always work perfectly due to missing I-Frames in the beginning of the video, so the first second or two may appear blank, glitched, or frozen. You can account for this by providing starting timestamps that are **slightly earlier in the video** than you actually need.
 
 ## Re-encoding clips
 If for some reason editing software still doesn't play friendly with the clip, you can try re-encoding it using the ``Tools > Re-Encode Clips`` option. Note that there may possibly be quality loss as a result.
+
+## Avoid Negative Timestamps 
+Some video editors/players will expect the original length of the video, causing the clip to appear much longer than it is. By default, this program tries to correct that by setting the "Avoid Negative Timestamps" setting to "make zero." You can change the mode by hovering over ``Tools > Avoid Negative Timestamps`` and choosing from the following:  
+- ``make_non_negative`` shifts timestamps to make them non-negative.
+- ``make_zero`` shifts timestamps so that the first timestamp is ``0``.
+- ``auto`` enables shifting when required by the target format.  
+Using this setting may cause audio/video tracks to become slightly desynced from one another. This can be manually corrected in i.e. Adobe Premiere by right clicking and unlinking the tracks, and then moving them manually until they align again. However, if accuracy is a concern, you may want to disable this setting by unchecking the checkbox.

@@ -1,9 +1,10 @@
 using ShrineFox.IO;
-using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
+using MetroSet_UI;
+using MetroSet_UI.Forms;
 
 namespace VinesauceVODClipper
 {
-    public partial class MainForm : Form
+    public partial class MainForm : MetroSetForm
     {
         public List<Video> videoList = new List<Video>();
         string ffmpegPath = "";
@@ -12,6 +13,9 @@ namespace VinesauceVODClipper
         {
             InitializeComponent();
             ffmpegPath = Path.Combine(Exe.Directory(), "Dependencies//ffmpeg.exe");
+            toolStripComboBox_AvoidNegativeTS.ComboBox.SelectedIndex = 0;
+            Theme.ThemeStyle = this.Style;
+            Theme.ApplyToForm(this);
             // Set up error logging
             Output.LogPath = "log.txt";
             Output.LogControl = rtb_Log;
@@ -86,7 +90,7 @@ namespace VinesauceVODClipper
                     UpdateInstructions();
                     CreateVideoListControls();
                 }
-
+                rtb_Log.Text = "";
                 Output.Log($"Done reading {videoList.Count} entries from file:\n\t{txtPath}", ConsoleColor.Green);
             }
         }
@@ -118,7 +122,7 @@ namespace VinesauceVODClipper
                 AutoSize = true,
                 AutoScroll = false,
                 AllowDrop = true,
-                Size = new Size(993, 22),
+                Size = new Size(793, 22),
                 Location = new Point(0, 0),
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 CellBorderStyle = TableLayoutPanelCellBorderStyle.Single,
@@ -126,7 +130,8 @@ namespace VinesauceVODClipper
             };
 
             // Create TLP layout
-            tlp.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+            tlp.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tlp.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
             tlp.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             tlp.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
             tlp.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
@@ -134,45 +139,52 @@ namespace VinesauceVODClipper
 
             // Create header row
             tlp.RowStyles.Add(new RowStyle());
+            Label lbl_VideoNumberHeader = new Label() { Text = "#", Font = headerFont };
             Label lbl_VideoTitleHeader = new Label() { Text = "Video Title", Font = headerFont };
             Label lbl_VideoPathHeader = new Label() { Text = "Video Path", Font = headerFont };
             Label lbl_StartTimeHeader = new Label() { Text = "Start Time", Font = headerFont };
             Label lbl_EndTimeHeader = new Label() { Text = "End Time", Font = headerFont };
-            tlp.Controls.Add(lbl_VideoTitleHeader, 0, 0);
-            tlp.Controls.Add(lbl_VideoPathHeader, 1, 0);
-            tlp.Controls.Add(lbl_StartTimeHeader, 3, 0);
-            tlp.Controls.Add(lbl_EndTimeHeader, 4, 0);
+            tlp.Controls.Add(lbl_VideoNumberHeader, 0, 0);
+            tlp.Controls.Add(lbl_VideoTitleHeader, 1, 0);
+            tlp.Controls.Add(lbl_VideoPathHeader, 2, 0);
+            tlp.Controls.Add(lbl_StartTimeHeader, 4, 0);
+            tlp.Controls.Add(lbl_EndTimeHeader, 5, 0);
 
             // Populate with video titles and timestamps from .txt
             for (int i = 0; i < videoList.Count; i++)
             {
                 tlp.RowStyles.Add(new RowStyle());
-                Label lbl_VideoTitle = new Label() { Text = videoList[i].Title, Dock = DockStyle.Fill, Name = $"lbl_VideoTitle_{i}", AllowDrop = true };
+                Label lbl_VideoNumber = new Label() { Text = $"#{i+1}", Dock = DockStyle.Fill, Name = $"lbl_VideoNumber_{i}", AllowDrop = true, AutoSize = true };
+                lbl_VideoNumber.DragEnter += DragEnter;
+                lbl_VideoNumber.DragDrop += VideoDragDrop;
+                Label lbl_VideoTitle = new Label() { Text = videoList[i].Title, Dock = DockStyle.Fill, Name = $"lbl_VideoTitle_{i}", AllowDrop = true, AutoSize = true };
                 lbl_VideoTitle.DragEnter += DragEnter;
                 lbl_VideoTitle.DragDrop += VideoDragDrop;
-                TextBox txt_VideoPath = new TextBox() { Text = "", Dock = DockStyle.Fill, Name = $"txt_VideoPath_{i}", AllowDrop = true };
+                TextBox txt_VideoPath = new TextBox() { Text = "", Dock = DockStyle.Fill, Name = $"txt_VideoPath_{i}", AllowDrop = true, BorderStyle = BorderStyle.None };
                 txt_VideoPath.DragEnter += DragEnter;
                 txt_VideoPath.DragDrop += VideoDragDrop;
-                Button btn_VideoPath = new Button() { Text = "...", Dock = DockStyle.Fill, Name = $"btn_VideoPath_{i}", AllowDrop = true };
+                Button btn_VideoPath = new Button() { Text = "...", Dock = DockStyle.Fill, Name = $"btn_VideoPath_{i}", AllowDrop = true, Size = new Size(100,30) };
                 btn_VideoPath.DragEnter += DragEnter;
                 btn_VideoPath.DragDrop += VideoDragDrop;
                 btn_VideoPath.Click += VideoPathBtnClick;
-                TextBox txt_StartTime = new TextBox() { Text = videoList[i].StartTime.ToString(@"hh\:mm\:ss"), Dock = DockStyle.Fill, Name = $"txt_StartTime_{i}", AllowDrop = true };
+                TextBox txt_StartTime = new TextBox() { Text = videoList[i].StartTime.ToString(@"hh\:mm\:ss"), Dock = DockStyle.Fill, Name = $"txt_StartTime_{i}", AllowDrop = true, BorderStyle = BorderStyle.None };
                 txt_StartTime.DragEnter += DragEnter;
                 txt_StartTime.DragDrop += VideoDragDrop;
-                TextBox txt_EndTime = new TextBox() { Text = videoList[i].EndTime.ToString(@"hh\:mm\:ss"), Dock = DockStyle.Fill, Name = $"txt_EndTime_{i}", AllowDrop = true };
+                TextBox txt_EndTime = new TextBox() { Text = videoList[i].EndTime.ToString(@"hh\:mm\:ss"), Dock = DockStyle.Fill, Name = $"txt_EndTime_{i}", AllowDrop = true, BorderStyle = BorderStyle.None };
                 txt_EndTime.DragEnter += DragEnter;
                 txt_EndTime.DragDrop += VideoDragDrop;
-                tlp.Controls.Add(lbl_VideoTitle, 0, i + 1);
-                tlp.Controls.Add(txt_VideoPath, 1, i + 1);
-                tlp.Controls.Add(btn_VideoPath, 2, i + 1);
-                tlp.Controls.Add(txt_StartTime, 3, i + 1);
-                tlp.Controls.Add(txt_EndTime, 4, i + 1);
+                tlp.Controls.Add(lbl_VideoNumber, 0, i + 1);
+                tlp.Controls.Add(lbl_VideoTitle, 1, i + 1);
+                tlp.Controls.Add(txt_VideoPath, 2, i + 1);
+                tlp.Controls.Add(btn_VideoPath, 3, i + 1);
+                tlp.Controls.Add(txt_StartTime, 4, i + 1);
+                tlp.Controls.Add(txt_EndTime, 5, i + 1);
             }
 
             // Add TLP to form (remove existing)
             pnl_VideoList.Controls.Clear();
             pnl_VideoList.Controls.Add(tlp);
+            Theme.ApplyToForm(this);
         }
 
         // Choose video file path for button clicked in TLP row
@@ -257,8 +269,13 @@ namespace VinesauceVODClipper
             {
                 string outputFilePath = FileSys.CreateUniqueFilePath(Path.Combine(txt_ClipsDir.Text, video.Title) + Path.GetExtension(video.Path));
 
+                // Add selected avoid negative timestamp mode to args
+                string avoidNegativeTSArgs = "";
+                if (avoidNegativeTimestampsToolStripMenuItem.Checked)
+                    avoidNegativeTSArgs += $" -avoid_negative_ts {toolStripComboBox_AvoidNegativeTS.ComboBox.SelectedItem.ToString()}";
+                
                 // Create clip from video in output directory without re-encoding
-                string args = $"-i \"{video.Path}\" -ss {video.StartTime} -to {video.EndTime} -map 0 -c copy -avoid_negative_ts make_zero \"{outputFilePath}\"";
+                string args = $"-i \"{video.Path}\" -ss {video.StartTime} -to {video.EndTime} -map 0 -c copy{avoidNegativeTSArgs} \"{outputFilePath}\"";
 
                 Output.Log($"Running ffmpeg with args:\n\t{args}");
                 Exe.Run(ffmpegPath, args, hideWindow: false);
@@ -371,7 +388,7 @@ namespace VinesauceVODClipper
             var selectedFiles = WinFormsDialogs.SelectFile("Choose video clips to re-encode", true);
             if (selectedFiles.Count > 0)
             {
-                foreach(var file in selectedFiles)
+                foreach (var file in selectedFiles)
                 {
                     string outputFilePath = FileSys.CreateUniqueFilePath(Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file)) + " (Re-Encoded)" + Path.GetExtension(file));
                     string args = $"-i \"{file}\"  -y -map 0 -c copy -c:a aac \"{outputFilePath}\"";
@@ -391,6 +408,18 @@ namespace VinesauceVODClipper
             }
 
             Output.Log("Done re-encoding clips.");
+        }
+
+        private void ToggleTheme_Click(object sender, EventArgs e)
+        {
+            if (toggleThemeToolStripMenuItem.Checked)
+                this.Style = MetroSet_UI.Enums.Style.Dark;
+            else
+                this.Style = MetroSet_UI.Enums.Style.Light;
+
+            Theme.ThemeStyle = this.Style;
+
+            Theme.ApplyToForm(this);
         }
     }
 
