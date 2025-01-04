@@ -60,6 +60,7 @@
             // 
             // tlp_Main
             // 
+            tlp_Main.AllowDrop = true;
             tlp_Main.ColumnCount = 2;
             tlp_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 85F));
             tlp_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
@@ -124,6 +125,7 @@
             // 
             // txt_ClipsDir
             // 
+            txt_ClipsDir.AllowDrop = true;
             txt_ClipsDir.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             txt_ClipsDir.BorderStyle = BorderStyle.FixedSingle;
             txt_ClipsDir.Location = new Point(3, 4);
@@ -131,9 +133,12 @@
             txt_ClipsDir.Size = new Size(624, 27);
             txt_ClipsDir.TabIndex = 0;
             txt_ClipsDir.TextChanged += OutputDirTxt_Changed;
+            txt_ClipsDir.DragDrop += ClipsDir_DragDrop;
+            txt_ClipsDir.DragEnter += DragEnter;
             // 
             // btn_ClipsDir
             // 
+            btn_ClipsDir.AllowDrop = true;
             btn_ClipsDir.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             btn_ClipsDir.Location = new Point(633, 4);
             btn_ClipsDir.Name = "btn_ClipsDir";
@@ -142,6 +147,8 @@
             btn_ClipsDir.Text = ". . .";
             btn_ClipsDir.UseVisualStyleBackColor = true;
             btn_ClipsDir.Click += OutputDirBtn_Click;
+            btn_ClipsDir.DragDrop += ClipsDir_DragDrop;
+            btn_ClipsDir.DragEnter += DragEnter;
             // 
             // groupBox_TxtFile
             // 
@@ -172,6 +179,7 @@
             // 
             // txt_TxtFile
             // 
+            txt_TxtFile.AllowDrop = true;
             txt_TxtFile.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             txt_TxtFile.BorderStyle = BorderStyle.FixedSingle;
             txt_TxtFile.Location = new Point(3, 4);
@@ -181,9 +189,12 @@
             txt_TxtFile.TabIndex = 0;
             txt_TxtFile.Click += TxtBtn_Click;
             txt_TxtFile.TextChanged += Txt_Changed;
+            txt_TxtFile.DragDrop += TxtFile_DragDrop;
+            txt_TxtFile.DragEnter += DragEnter;
             // 
             // btn_TxtFile
             // 
+            btn_TxtFile.AllowDrop = true;
             btn_TxtFile.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             btn_TxtFile.Location = new Point(633, 3);
             btn_TxtFile.Name = "btn_TxtFile";
@@ -192,6 +203,8 @@
             btn_TxtFile.Text = ". . .";
             btn_TxtFile.UseVisualStyleBackColor = true;
             btn_TxtFile.Click += TxtBtn_Click;
+            btn_TxtFile.DragDrop += TxtFile_DragDrop;
+            btn_TxtFile.DragEnter += DragEnter;
             // 
             // groupBox_VideoList
             // 
@@ -207,6 +220,7 @@
             // 
             // pnl_VideoList
             // 
+            pnl_VideoList.AllowDrop = true;
             pnl_VideoList.AutoScroll = true;
             pnl_VideoList.Controls.Add(tlp_VideoList);
             pnl_VideoList.Dock = DockStyle.Fill;
@@ -298,7 +312,7 @@
             rtb_Instructions.ReadOnly = true;
             rtb_Instructions.Size = new Size(794, 61);
             rtb_Instructions.TabIndex = 6;
-            rtb_Instructions.Text = "Instructions:\n- Drag Raw VOD files onto matching video names below.\n- Create Clips to generate shortened videos in Output folder.";
+            rtb_Instructions.Text = "Instructions:\n- Load a .txt file with each line matching the following format:\n[Vinesauce] Vinny - Video Title 00:00:00 01:59:59";
             // 
             // btn_CreateClips
             // 
@@ -315,6 +329,7 @@
             // 
             // MainForm
             // 
+            AllowDrop = true;
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);

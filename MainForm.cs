@@ -80,11 +80,19 @@ namespace VinesauceVODClipper
                 // Update form with video list
                 if (videoList.Count > 0)
                 {
+                    UpdateInstructions();
                     CreateVideoListControls();
                 }
 
                 Output.Log($"Done reading {videoList.Count} entries from file:\n\t{txtPath}", ConsoleColor.Green);
             }
+        }
+
+        private void UpdateInstructions()
+        {
+            rtb_Instructions.Text = "Instructions:\r\n" +
+                "- Drag Raw VOD video files onto table rows with matching titles below.\r\n" +
+                "- Click \"Create Clips\" when finished to generate new videos in Output folder.";
         }
 
         private string TimestampStringToHourFormat(string timeStamp)
@@ -106,6 +114,7 @@ namespace VinesauceVODClipper
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 AutoSize = true,
                 AutoScroll = false,
+                AllowDrop = true,
                 Size = new Size(762, 22),
                 Location = new Point(0, 0),
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
@@ -130,16 +139,27 @@ namespace VinesauceVODClipper
             tlp.Controls.Add(lbl_VideoPathHeader, 1, 0);
             tlp.Controls.Add(lbl_StartTimeHeader, 3, 0);
             tlp.Controls.Add(lbl_EndTimeHeader, 4, 0);
-            
+
             // Populate with video titles and timestamps from .txt
             for (int i = 0; i < videoList.Count; i++)
             {
                 tlp.RowStyles.Add(new RowStyle());
-                Label lbl_VideoTitle = new Label() { Text = videoList[i].Title, Dock = DockStyle.Fill, Name = $"lbl_VideoTitle_{i}" };
-                TextBox txt_VideoPath = new TextBox() { Text = "", Dock = DockStyle.Fill, Name = $"txt_VideoPath_{i}" };
-                Button btn_VideoPath = new Button() { Text = "...", Dock = DockStyle.Fill, Name = $"btn_VideoPath_{i}" };
-                TextBox txt_StartTime = new TextBox() { Text = videoList[i].StartTime.ToString(@"hh\:mm\:ss"), Dock = DockStyle.Fill, Name = $"txt_StartTime_{i}" };
-                TextBox txt_EndTime = new TextBox() { Text = videoList[i].EndTime.ToString(@"hh\:mm\:ss"), Dock = DockStyle.Fill, Name = $"txt_EndTime_{i}" };
+                Label lbl_VideoTitle = new Label() { Text = videoList[i].Title, Dock = DockStyle.Fill, Name = $"lbl_VideoTitle_{i}", AllowDrop = true };
+                lbl_VideoTitle.DragEnter += DragEnter;
+                lbl_VideoTitle.DragDrop += VideoDragDrop;
+                TextBox txt_VideoPath = new TextBox() { Text = "", Dock = DockStyle.Fill, Name = $"txt_VideoPath_{i}", AllowDrop = true };
+                txt_VideoPath.DragEnter += DragEnter;
+                txt_VideoPath.DragDrop += VideoDragDrop;
+                Button btn_VideoPath = new Button() { Text = "...", Dock = DockStyle.Fill, Name = $"btn_VideoPath_{i}", AllowDrop = true };
+                btn_VideoPath.DragEnter += DragEnter;
+                btn_VideoPath.DragDrop += VideoDragDrop;
+                btn_VideoPath.Click += VideoPathBtnClick;
+                TextBox txt_StartTime = new TextBox() { Text = videoList[i].StartTime.ToString(@"hh\:mm\:ss"), Dock = DockStyle.Fill, Name = $"txt_StartTime_{i}", AllowDrop = true };
+                txt_StartTime.DragEnter += DragEnter;
+                txt_StartTime.DragDrop += VideoDragDrop;
+                TextBox txt_EndTime = new TextBox() { Text = videoList[i].EndTime.ToString(@"hh\:mm\:ss"), Dock = DockStyle.Fill, Name = $"txt_EndTime_{i}", AllowDrop = true };
+                txt_EndTime.DragEnter += DragEnter;
+                txt_EndTime.DragDrop += VideoDragDrop;
                 tlp.Controls.Add(lbl_VideoTitle, 0, i + 1);
                 tlp.Controls.Add(txt_VideoPath, 1, i + 1);
                 tlp.Controls.Add(btn_VideoPath, 2, i + 1);
@@ -150,6 +170,34 @@ namespace VinesauceVODClipper
             // Add TLP to form (remove existing)
             pnl_VideoList.Controls.Clear();
             pnl_VideoList.Controls.Add(tlp);
+        }
+
+        // Choose video file path for button clicked in TLP row
+        private void VideoPathBtnClick(object? sender, EventArgs e)
+        {
+            Control control = (Control)sender;
+            int rowID = Convert.ToInt32(control.Name.Split("_").Last());
+
+            var selectedFiles = WinFormsDialogs.SelectFile("Pick matching raw VOD video file");
+            if (selectedFiles.Count > 0 && File.Exists(selectedFiles.First()))
+            {
+                TextBox txtBox = WinForms.GetControl(this, $"txt_VideoPath_{rowID}");
+                txtBox.Text = selectedFiles.First();
+            }
+        }
+
+        // Get file path of video dropped on controls in TLP row
+        private void VideoDragDrop(object? sender, DragEventArgs e)
+        {
+            Control control = (Control)sender;
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            if (files.Length <= 0)
+                return;
+
+            int rowID = Convert.ToInt32(control.Name.Split("_").Last());
+            TextBox txtBox = WinForms.GetControl(this, $"txt_VideoPath_{rowID}");
+            txtBox.Text = files.First();
         }
 
         // Browse for .txt file
@@ -203,12 +251,14 @@ namespace VinesauceVODClipper
 
             int successCount = 0;
             int failureCount = 0;
-            foreach(var video in videoList)
+            foreach (var video in videoList)
             {
                 string outputFilePath = FileSys.CreateUniqueFilePath(Path.Combine(txt_ClipsDir.Text, video.Title) + Path.GetExtension(video.Path));
 
                 // Create clip from video in output directory without re-encoding
-                Exe.Run(ffmpegPath, $"-copyts -ss {video.StartTime} -i \"{video.Path}\" -to {video.EndTime}  -map 0 -c copy {outputFilePath}", hideWindow: false);
+                string args = $"-i \"{video.Path}\" -copyts -ss {video.StartTime} -to {video.EndTime} -map 0 -c copy \"{outputFilePath}\"";
+                Output.Log($"Running ffmpeg with args:\n\t{args}");
+                Exe.Run(ffmpegPath, args, hideWindow: false);
                 using (FileSys.WaitForFile(outputFilePath)) { };
                 // Let user know if task succeeded or not
                 if (!File.Exists(outputFilePath))
@@ -233,7 +283,7 @@ namespace VinesauceVODClipper
             var tlp = pnl_VideoList.GetAllControls<TableLayoutPanel>().First();
             var txtCtrls = tlp.GetAllControls<TextBox>();
 
-            foreach(TextBox txtBox in txtCtrls)
+            foreach (TextBox txtBox in txtCtrls)
             {
                 int rowID = Convert.ToInt32(txtBox.Name.Split('_').Last());
                 try
@@ -242,7 +292,7 @@ namespace VinesauceVODClipper
                         videoList[rowID].StartTime = TimeSpan.Parse(TimestampStringToHourFormat(txtBox.Text));
                     else if (txtBox.Name.Split('_')[1] == "EndTime")
                         videoList[rowID].EndTime = TimeSpan.Parse(TimestampStringToHourFormat(txtBox.Text));
-                    else if (txtBox.Name.Split('_')[1] == "VideoPath") 
+                    else if (txtBox.Name.Split('_')[1] == "VideoPath")
                     {
                         videoList[rowID].Path = txtBox.Text;
 
@@ -267,6 +317,41 @@ namespace VinesauceVODClipper
                 }
             }
             return true;
+        }
+
+        private void DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        // Set text file to drag/dropped one
+        private void TxtFile_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            if (files.Length <= 0 || Path.GetExtension(files.First()).ToLower() != ".txt")
+                return;
+
+            txt_TxtFile.Text = files.First();
+        }
+
+        // Set output directory to drag/dropped one
+
+        private void ClipsDir_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            if (files.Length <= 0 || !Directory.Exists(files.First()))
+                return;
+
+            txt_ClipsDir.Text = files.First();
         }
     }
 
