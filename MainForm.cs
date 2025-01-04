@@ -118,7 +118,7 @@ namespace VinesauceVODClipper
                 AutoSize = true,
                 AutoScroll = false,
                 AllowDrop = true,
-                Size = new Size(762, 22),
+                Size = new Size(993, 22),
                 Location = new Point(0, 0),
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 CellBorderStyle = TableLayoutPanelCellBorderStyle.Single,
@@ -302,7 +302,7 @@ namespace VinesauceVODClipper
                         if (!File.Exists(txtBox.Text))
                         {
                             string errorText = $"Could not find video file for \"{videoList[rowID].Title}\" at specified path:" +
-                                $"\\n\t\"{txtBox.Text}\"";
+                                $"\n\t\"{txtBox.Text}\"";
                             Output.Log(errorText, ConsoleColor.Red);
                             MessageBox.Show(errorText);
 
