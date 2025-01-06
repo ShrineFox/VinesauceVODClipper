@@ -54,6 +54,7 @@ namespace VinesauceVODClipper
             tlp_LogAndCreateClipsBtn = new TableLayoutPanel();
             rtb_Log = new RichTextBox();
             btn_CreateClips = new MetroSet_UI.Controls.MetroSetButton();
+            detailedLogsToolStripMenuItem = new ToolStripMenuItem();
             tlp_Main.SuspendLayout();
             groupBox_ClipsDir.SuspendLayout();
             tlp_ClipsDir.SuspendLayout();
@@ -282,7 +283,7 @@ namespace VinesauceVODClipper
             // 
             // optionsToolStripMenuItem
             // 
-            optionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { avoidNegativeTimestampsToolStripMenuItem, toggleThemeToolStripMenuItem });
+            optionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { avoidNegativeTimestampsToolStripMenuItem, toggleThemeToolStripMenuItem, detailedLogsToolStripMenuItem });
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             optionsToolStripMenuItem.Size = new Size(75, 24);
             optionsToolStripMenuItem.Text = "Options";
@@ -396,6 +397,13 @@ namespace VinesauceVODClipper
             btn_CreateClips.ThemeName = "MetroLite";
             btn_CreateClips.Click += CreateClipsBtn_Click;
             // 
+            // detailedLogsToolStripMenuItem
+            // 
+            detailedLogsToolStripMenuItem.CheckOnClick = true;
+            detailedLogsToolStripMenuItem.Name = "detailedLogsToolStripMenuItem";
+            detailedLogsToolStripMenuItem.Size = new Size(279, 26);
+            detailedLogsToolStripMenuItem.Text = "Detailed Logs";
+            // 
             // MainForm
             // 
             AllowDrop = true;
@@ -490,5 +498,6 @@ namespace VinesauceVODClipper
         private TableLayoutPanel tlp_LogAndCreateClipsBtn;
         private RichTextBox rtb_Log;
         private MetroSet_UI.Controls.MetroSetButton btn_CreateClips;
+        private ToolStripMenuItem detailedLogsToolStripMenuItem;
     }
 }

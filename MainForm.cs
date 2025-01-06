@@ -281,6 +281,8 @@ namespace VinesauceVODClipper
                 Output.Log($"Running ffmpeg with args:\n\t{args}");
                 Exe.Run(ffmpegPath, args, hideWindow: false);
                 using (FileSys.WaitForFile(outputFilePath)) { };
+                if (detailedLogsToolStripMenuItem.Checked)
+                    Output.Log(GetFfmpegLogs());
                 // Let user know if task succeeded or not
                 if (!File.Exists(outputFilePath))
                 {
@@ -296,6 +298,19 @@ namespace VinesauceVODClipper
 
             MessageBox.Show($"Finished creating clips.\n\nSucceeded: {successCount}\nFailed: {failureCount}", "Finished Creating Clips");
             Output.Log($"Done creating clips.");
+        }
+
+        private string GetFfmpegLogs()
+        {
+            if (Directory.GetFiles(Path.GetDirectoryName(ffmpegPath), "*.log").Length <= 0)
+                return "";
+
+            var latestLog = new DirectoryInfo(Path.GetDirectoryName(ffmpegPath)).GetFiles("*.log").OrderBy(f => f.LastWriteTime).Last();
+
+            if (latestLog != null && (DateTime.Now - latestLog.LastWriteTime).TotalMinutes <= 1)
+                return File.ReadAllText(latestLog.FullName);
+
+            return "";
         }
 
         // Make sure timestamps are parsed correctly and input video files exist
@@ -394,7 +409,7 @@ namespace VinesauceVODClipper
                     string outputFilePath = FileSys.CreateUniqueFilePath(Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file)) + " (Re-Encoded)" + Path.GetExtension(file));
                     string args = $"-i \"{file}\"  -y -map 0 -c copy -c:a aac \"{outputFilePath}\" -report";
                     Output.Log($"Running ffmpeg with args:\n\t{args}");
-                    Exe.Run(ffmpegPath, args, hideWindow: false);
+                    Exe.Run(ffmpegPath, args, redirectStdOut: detailedLogsToolStripMenuItem.Checked);
                     using (FileSys.WaitForFile(outputFilePath)) { };
                     // Let user know if task succeeded or not
                     if (!File.Exists(outputFilePath))
@@ -405,6 +420,7 @@ namespace VinesauceVODClipper
                     {
                         Output.Log($"Clip re-encoded: \"{outputFilePath}\"", ConsoleColor.Green);
                     }
+                    
                 }
             }
 
