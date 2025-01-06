@@ -50,11 +50,11 @@ namespace VinesauceVODClipper
             avoidNegativeTimestampsToolStripMenuItem = new ToolStripMenuItem();
             toolStripComboBox_AvoidNegativeTS = new ToolStripComboBox();
             toggleThemeToolStripMenuItem = new ToolStripMenuItem();
+            detailedLogsToolStripMenuItem = new ToolStripMenuItem();
             splitContainer_Main = new SplitContainer();
             tlp_LogAndCreateClipsBtn = new TableLayoutPanel();
             rtb_Log = new RichTextBox();
             btn_CreateClips = new MetroSet_UI.Controls.MetroSetButton();
-            detailedLogsToolStripMenuItem = new ToolStripMenuItem();
             tlp_Main.SuspendLayout();
             groupBox_ClipsDir.SuspendLayout();
             tlp_ClipsDir.SuspendLayout();
@@ -315,6 +315,15 @@ namespace VinesauceVODClipper
             toggleThemeToolStripMenuItem.Text = "Dark Theme";
             toggleThemeToolStripMenuItem.CheckedChanged += ToggleTheme_Click;
             // 
+            // detailedLogsToolStripMenuItem
+            // 
+            detailedLogsToolStripMenuItem.Checked = true;
+            detailedLogsToolStripMenuItem.CheckOnClick = true;
+            detailedLogsToolStripMenuItem.CheckState = CheckState.Checked;
+            detailedLogsToolStripMenuItem.Name = "detailedLogsToolStripMenuItem";
+            detailedLogsToolStripMenuItem.Size = new Size(279, 26);
+            detailedLogsToolStripMenuItem.Text = "Detailed Logs";
+            // 
             // splitContainer_Main
             // 
             splitContainer_Main.Dock = DockStyle.Fill;
@@ -397,13 +406,6 @@ namespace VinesauceVODClipper
             btn_CreateClips.ThemeName = "MetroLite";
             btn_CreateClips.Click += CreateClipsBtn_Click;
             // 
-            // detailedLogsToolStripMenuItem
-            // 
-            detailedLogsToolStripMenuItem.CheckOnClick = true;
-            detailedLogsToolStripMenuItem.Name = "detailedLogsToolStripMenuItem";
-            detailedLogsToolStripMenuItem.Size = new Size(279, 26);
-            detailedLogsToolStripMenuItem.Text = "Detailed Logs";
-            // 
             // MainForm
             // 
             AllowDrop = true;
@@ -428,7 +430,7 @@ namespace VinesauceVODClipper
             SizeGripStyle = SizeGripStyle.Hide;
             SmallRectThickness = 0;
             Style = MetroSet_UI.Enums.Style.Dark;
-            Text = "Vinesauce VOD Clipper v1.2.1";
+            Text = "Vinesauce VOD Clipper v1.2.2";
             TextColor = Color.White;
             ThemeName = "MetroDark";
             tlp_Main.ResumeLayout(false);
