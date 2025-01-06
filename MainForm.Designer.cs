@@ -42,11 +42,6 @@ namespace VinesauceVODClipper
             btn_TxtFile = new Button();
             groupBox_VideoList = new GroupBox();
             pnl_VideoList = new Panel();
-            tlp_VideoList = new TableLayoutPanel();
-            lbl_VideoPath = new Label();
-            lbl_Title = new Label();
-            lbl_StartTime = new Label();
-            lbl_EndTime = new Label();
             rtb_Instructions = new RichTextBox();
             menuStrip1 = new MenuStrip();
             toolsToolStripMenuItem = new ToolStripMenuItem();
@@ -65,8 +60,6 @@ namespace VinesauceVODClipper
             groupBox_TxtFile.SuspendLayout();
             tlp_TxtFile.SuspendLayout();
             groupBox_VideoList.SuspendLayout();
-            pnl_VideoList.SuspendLayout();
-            tlp_VideoList.SuspendLayout();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer_Main).BeginInit();
             splitContainer_Main.Panel1.SuspendLayout();
@@ -86,15 +79,14 @@ namespace VinesauceVODClipper
             tlp_Main.Controls.Add(rtb_Instructions, 0, 2);
             tlp_Main.Dock = DockStyle.Fill;
             tlp_Main.Location = new Point(0, 0);
-            tlp_Main.Margin = new Padding(2, 3, 2, 3);
+            tlp_Main.Margin = new Padding(3, 4, 3, 4);
             tlp_Main.Name = "tlp_Main";
             tlp_Main.RowCount = 4;
+            tlp_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tlp_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
             tlp_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 15F));
-            tlp_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 15F));
-            tlp_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 15F));
-            tlp_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 55F));
-            tlp_Main.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tlp_Main.Size = new Size(793, 380);
+            tlp_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 45F));
+            tlp_Main.Size = new Size(880, 402);
             tlp_Main.TabIndex = 0;
             // 
             // groupBox_ClipsDir
@@ -102,12 +94,12 @@ namespace VinesauceVODClipper
             tlp_Main.SetColumnSpan(groupBox_ClipsDir, 2);
             groupBox_ClipsDir.Controls.Add(tlp_ClipsDir);
             groupBox_ClipsDir.Dock = DockStyle.Fill;
-            groupBox_ClipsDir.Font = new Font("Microsoft Sans Serif", 9F);
-            groupBox_ClipsDir.Location = new Point(2, 60);
-            groupBox_ClipsDir.Margin = new Padding(2, 3, 2, 3);
+            groupBox_ClipsDir.Font = new Font("Microsoft Sans Serif", 10F);
+            groupBox_ClipsDir.Location = new Point(3, 84);
+            groupBox_ClipsDir.Margin = new Padding(3, 4, 3, 4);
             groupBox_ClipsDir.Name = "groupBox_ClipsDir";
-            groupBox_ClipsDir.Padding = new Padding(2, 3, 2, 3);
-            groupBox_ClipsDir.Size = new Size(789, 51);
+            groupBox_ClipsDir.Padding = new Padding(3, 4, 3, 4);
+            groupBox_ClipsDir.Size = new Size(874, 72);
             groupBox_ClipsDir.TabIndex = 5;
             groupBox_ClipsDir.TabStop = false;
             groupBox_ClipsDir.Text = "Output Clips Directory";
@@ -115,17 +107,17 @@ namespace VinesauceVODClipper
             // tlp_ClipsDir
             // 
             tlp_ClipsDir.ColumnCount = 2;
-            tlp_ClipsDir.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 80F));
-            tlp_ClipsDir.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            tlp_ClipsDir.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 92F));
+            tlp_ClipsDir.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 8F));
             tlp_ClipsDir.Controls.Add(txt_ClipsDir, 0, 0);
             tlp_ClipsDir.Controls.Add(btn_ClipsDir, 1, 0);
             tlp_ClipsDir.Dock = DockStyle.Fill;
-            tlp_ClipsDir.Location = new Point(2, 20);
-            tlp_ClipsDir.Margin = new Padding(2, 3, 2, 3);
+            tlp_ClipsDir.Location = new Point(3, 23);
+            tlp_ClipsDir.Margin = new Padding(3, 4, 3, 4);
             tlp_ClipsDir.Name = "tlp_ClipsDir";
             tlp_ClipsDir.RowCount = 1;
             tlp_ClipsDir.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlp_ClipsDir.Size = new Size(785, 28);
+            tlp_ClipsDir.Size = new Size(868, 45);
             tlp_ClipsDir.TabIndex = 0;
             // 
             // txt_ClipsDir
@@ -133,10 +125,10 @@ namespace VinesauceVODClipper
             txt_ClipsDir.AllowDrop = true;
             txt_ClipsDir.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             txt_ClipsDir.BorderStyle = BorderStyle.FixedSingle;
-            txt_ClipsDir.Location = new Point(2, 3);
-            txt_ClipsDir.Margin = new Padding(2, 3, 2, 3);
+            txt_ClipsDir.Location = new Point(3, 9);
+            txt_ClipsDir.Margin = new Padding(3, 4, 3, 4);
             txt_ClipsDir.Name = "txt_ClipsDir";
-            txt_ClipsDir.Size = new Size(624, 24);
+            txt_ClipsDir.Size = new Size(792, 26);
             txt_ClipsDir.TabIndex = 0;
             txt_ClipsDir.TextChanged += OutputDirTxt_Changed;
             txt_ClipsDir.DragDrop += ClipsDir_DragDrop;
@@ -148,10 +140,10 @@ namespace VinesauceVODClipper
             btn_ClipsDir.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             btn_ClipsDir.BackColor = Color.FromArgb(30, 30, 30);
             btn_ClipsDir.ForeColor = Color.Silver;
-            btn_ClipsDir.Location = new Point(630, 3);
-            btn_ClipsDir.Margin = new Padding(2, 3, 2, 3);
+            btn_ClipsDir.Location = new Point(801, 6);
+            btn_ClipsDir.Margin = new Padding(3, 4, 3, 4);
             btn_ClipsDir.Name = "btn_ClipsDir";
-            btn_ClipsDir.Size = new Size(153, 22);
+            btn_ClipsDir.Size = new Size(64, 33);
             btn_ClipsDir.TabIndex = 1;
             btn_ClipsDir.Text = ". . .";
             btn_ClipsDir.UseVisualStyleBackColor = false;
@@ -164,12 +156,12 @@ namespace VinesauceVODClipper
             tlp_Main.SetColumnSpan(groupBox_TxtFile, 2);
             groupBox_TxtFile.Controls.Add(tlp_TxtFile);
             groupBox_TxtFile.Dock = DockStyle.Fill;
-            groupBox_TxtFile.Font = new Font("Microsoft Sans Serif", 9F);
-            groupBox_TxtFile.Location = new Point(2, 3);
-            groupBox_TxtFile.Margin = new Padding(2, 3, 2, 3);
+            groupBox_TxtFile.Font = new Font("Microsoft Sans Serif", 10F);
+            groupBox_TxtFile.Location = new Point(3, 4);
+            groupBox_TxtFile.Margin = new Padding(3, 4, 3, 4);
             groupBox_TxtFile.Name = "groupBox_TxtFile";
-            groupBox_TxtFile.Padding = new Padding(2, 3, 2, 3);
-            groupBox_TxtFile.Size = new Size(789, 51);
+            groupBox_TxtFile.Padding = new Padding(3, 4, 3, 4);
+            groupBox_TxtFile.Size = new Size(874, 72);
             groupBox_TxtFile.TabIndex = 0;
             groupBox_TxtFile.TabStop = false;
             groupBox_TxtFile.Text = ".Txt File With Timestamps";
@@ -177,17 +169,17 @@ namespace VinesauceVODClipper
             // tlp_TxtFile
             // 
             tlp_TxtFile.ColumnCount = 2;
-            tlp_TxtFile.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 80F));
-            tlp_TxtFile.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            tlp_TxtFile.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 92F));
+            tlp_TxtFile.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 8F));
             tlp_TxtFile.Controls.Add(txt_TxtFile, 0, 0);
             tlp_TxtFile.Controls.Add(btn_TxtFile, 1, 0);
             tlp_TxtFile.Dock = DockStyle.Fill;
-            tlp_TxtFile.Location = new Point(2, 20);
-            tlp_TxtFile.Margin = new Padding(2, 3, 2, 3);
+            tlp_TxtFile.Location = new Point(3, 23);
+            tlp_TxtFile.Margin = new Padding(3, 4, 3, 4);
             tlp_TxtFile.Name = "tlp_TxtFile";
             tlp_TxtFile.RowCount = 1;
             tlp_TxtFile.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlp_TxtFile.Size = new Size(785, 28);
+            tlp_TxtFile.Size = new Size(868, 45);
             tlp_TxtFile.TabIndex = 0;
             // 
             // txt_TxtFile
@@ -195,11 +187,11 @@ namespace VinesauceVODClipper
             txt_TxtFile.AllowDrop = true;
             txt_TxtFile.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             txt_TxtFile.BorderStyle = BorderStyle.FixedSingle;
-            txt_TxtFile.Location = new Point(2, 3);
-            txt_TxtFile.Margin = new Padding(2, 3, 2, 3);
+            txt_TxtFile.Location = new Point(3, 9);
+            txt_TxtFile.Margin = new Padding(3, 4, 3, 4);
             txt_TxtFile.Name = "txt_TxtFile";
             txt_TxtFile.ReadOnly = true;
-            txt_TxtFile.Size = new Size(624, 24);
+            txt_TxtFile.Size = new Size(792, 26);
             txt_TxtFile.TabIndex = 0;
             txt_TxtFile.Click += TxtBtn_Click;
             txt_TxtFile.TextChanged += Txt_Changed;
@@ -212,10 +204,10 @@ namespace VinesauceVODClipper
             btn_TxtFile.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             btn_TxtFile.BackColor = Color.FromArgb(30, 30, 30);
             btn_TxtFile.ForeColor = Color.Silver;
-            btn_TxtFile.Location = new Point(630, 3);
-            btn_TxtFile.Margin = new Padding(2, 3, 2, 3);
+            btn_TxtFile.Location = new Point(801, 6);
+            btn_TxtFile.Margin = new Padding(3, 4, 3, 4);
             btn_TxtFile.Name = "btn_TxtFile";
-            btn_TxtFile.Size = new Size(153, 22);
+            btn_TxtFile.Size = new Size(64, 33);
             btn_TxtFile.TabIndex = 1;
             btn_TxtFile.Text = ". . .";
             btn_TxtFile.UseVisualStyleBackColor = false;
@@ -228,103 +220,25 @@ namespace VinesauceVODClipper
             tlp_Main.SetColumnSpan(groupBox_VideoList, 2);
             groupBox_VideoList.Controls.Add(pnl_VideoList);
             groupBox_VideoList.Dock = DockStyle.Fill;
-            groupBox_VideoList.Font = new Font("Microsoft Sans Serif", 9F);
-            groupBox_VideoList.Location = new Point(2, 174);
-            groupBox_VideoList.Margin = new Padding(2, 3, 2, 3);
+            groupBox_VideoList.Font = new Font("Microsoft Sans Serif", 10F);
+            groupBox_VideoList.Location = new Point(3, 224);
+            groupBox_VideoList.Margin = new Padding(3, 4, 3, 4);
             groupBox_VideoList.Name = "groupBox_VideoList";
-            groupBox_VideoList.Padding = new Padding(2, 3, 2, 3);
-            groupBox_VideoList.Size = new Size(789, 203);
+            groupBox_VideoList.Padding = new Padding(3, 4, 3, 4);
+            groupBox_VideoList.Size = new Size(874, 174);
             groupBox_VideoList.TabIndex = 4;
             groupBox_VideoList.TabStop = false;
-            groupBox_VideoList.Text = "Videos to Generate Clips From";
             // 
             // pnl_VideoList
             // 
             pnl_VideoList.AllowDrop = true;
             pnl_VideoList.AutoScroll = true;
-            pnl_VideoList.Controls.Add(tlp_VideoList);
             pnl_VideoList.Dock = DockStyle.Fill;
-            pnl_VideoList.Location = new Point(2, 20);
-            pnl_VideoList.Margin = new Padding(2, 3, 2, 3);
+            pnl_VideoList.Location = new Point(3, 23);
+            pnl_VideoList.Margin = new Padding(3, 4, 3, 4);
             pnl_VideoList.Name = "pnl_VideoList";
-            pnl_VideoList.Size = new Size(785, 180);
+            pnl_VideoList.Size = new Size(868, 147);
             pnl_VideoList.TabIndex = 0;
-            // 
-            // tlp_VideoList
-            // 
-            tlp_VideoList.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            tlp_VideoList.AutoSize = true;
-            tlp_VideoList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tlp_VideoList.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
-            tlp_VideoList.ColumnCount = 5;
-            tlp_VideoList.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 38.0952377F));
-            tlp_VideoList.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23.8095245F));
-            tlp_VideoList.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 9.523809F));
-            tlp_VideoList.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 14.2857141F));
-            tlp_VideoList.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 14.2857141F));
-            tlp_VideoList.Controls.Add(lbl_VideoPath, 1, 0);
-            tlp_VideoList.Controls.Add(lbl_Title, 0, 0);
-            tlp_VideoList.Controls.Add(lbl_StartTime, 3, 0);
-            tlp_VideoList.Controls.Add(lbl_EndTime, 4, 0);
-            tlp_VideoList.Location = new Point(0, 0);
-            tlp_VideoList.Margin = new Padding(2, 3, 2, 3);
-            tlp_VideoList.Name = "tlp_VideoList";
-            tlp_VideoList.RowCount = 1;
-            tlp_VideoList.RowStyles.Add(new RowStyle());
-            tlp_VideoList.RowStyles.Add(new RowStyle());
-            tlp_VideoList.RowStyles.Add(new RowStyle());
-            tlp_VideoList.RowStyles.Add(new RowStyle());
-            tlp_VideoList.RowStyles.Add(new RowStyle());
-            tlp_VideoList.Size = new Size(741, 22);
-            tlp_VideoList.TabIndex = 0;
-            // 
-            // lbl_VideoPath
-            // 
-            lbl_VideoPath.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            lbl_VideoPath.AutoSize = true;
-            lbl_VideoPath.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbl_VideoPath.Location = new Point(284, 1);
-            lbl_VideoPath.Margin = new Padding(2, 0, 2, 0);
-            lbl_VideoPath.Name = "lbl_VideoPath";
-            lbl_VideoPath.Size = new Size(171, 20);
-            lbl_VideoPath.TabIndex = 6;
-            lbl_VideoPath.Text = "Video Path";
-            // 
-            // lbl_Title
-            // 
-            lbl_Title.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            lbl_Title.AutoSize = true;
-            lbl_Title.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbl_Title.Location = new Point(3, 1);
-            lbl_Title.Margin = new Padding(2, 0, 2, 0);
-            lbl_Title.Name = "lbl_Title";
-            lbl_Title.Size = new Size(276, 20);
-            lbl_Title.TabIndex = 5;
-            lbl_Title.Text = "Video Title";
-            // 
-            // lbl_StartTime
-            // 
-            lbl_StartTime.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            lbl_StartTime.AutoSize = true;
-            lbl_StartTime.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbl_StartTime.Location = new Point(531, 1);
-            lbl_StartTime.Margin = new Padding(2, 0, 2, 0);
-            lbl_StartTime.Name = "lbl_StartTime";
-            lbl_StartTime.Size = new Size(101, 20);
-            lbl_StartTime.TabIndex = 7;
-            lbl_StartTime.Text = "Start Time";
-            // 
-            // lbl_EndTime
-            // 
-            lbl_EndTime.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            lbl_EndTime.AutoSize = true;
-            lbl_EndTime.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbl_EndTime.Location = new Point(637, 1);
-            lbl_EndTime.Margin = new Padding(2, 0, 2, 0);
-            lbl_EndTime.Name = "lbl_EndTime";
-            lbl_EndTime.Size = new Size(101, 20);
-            lbl_EndTime.TabIndex = 8;
-            lbl_EndTime.Text = "End Time";
             // 
             // rtb_Instructions
             // 
@@ -334,11 +248,11 @@ namespace VinesauceVODClipper
             rtb_Instructions.Dock = DockStyle.Fill;
             rtb_Instructions.Font = new Font("Microsoft Sans Serif", 9F);
             rtb_Instructions.ForeColor = Color.DimGray;
-            rtb_Instructions.Location = new Point(2, 117);
-            rtb_Instructions.Margin = new Padding(2, 3, 2, 3);
+            rtb_Instructions.Location = new Point(3, 164);
+            rtb_Instructions.Margin = new Padding(3, 4, 3, 4);
             rtb_Instructions.Name = "rtb_Instructions";
             rtb_Instructions.ReadOnly = true;
-            rtb_Instructions.Size = new Size(789, 51);
+            rtb_Instructions.Size = new Size(874, 52);
             rtb_Instructions.TabIndex = 6;
             rtb_Instructions.Text = "Instructions:\n- Load a .txt file with each line matching the following format:\n[Vinesauce] Vinny - Video Title 00:00:00 01:59:59";
             // 
@@ -348,8 +262,7 @@ namespace VinesauceVODClipper
             menuStrip1.Items.AddRange(new ToolStripItem[] { toolsToolStripMenuItem, optionsToolStripMenuItem });
             menuStrip1.Location = new Point(2, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Padding = new Padding(5, 2, 0, 2);
-            menuStrip1.Size = new Size(793, 28);
+            menuStrip1.Size = new Size(880, 28);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -405,6 +318,7 @@ namespace VinesauceVODClipper
             // 
             splitContainer_Main.Dock = DockStyle.Fill;
             splitContainer_Main.Location = new Point(2, 28);
+            splitContainer_Main.Margin = new Padding(4);
             splitContainer_Main.Name = "splitContainer_Main";
             splitContainer_Main.Orientation = Orientation.Horizontal;
             // 
@@ -416,8 +330,9 @@ namespace VinesauceVODClipper
             // 
             splitContainer_Main.Panel2.Controls.Add(tlp_LogAndCreateClipsBtn);
             splitContainer_Main.Panel2MinSize = 60;
-            splitContainer_Main.Size = new Size(793, 442);
-            splitContainer_Main.SplitterDistance = 380;
+            splitContainer_Main.Size = new Size(880, 469);
+            splitContainer_Main.SplitterDistance = 402;
+            splitContainer_Main.SplitterWidth = 5;
             splitContainer_Main.TabIndex = 2;
             // 
             // tlp_LogAndCreateClipsBtn
@@ -429,10 +344,11 @@ namespace VinesauceVODClipper
             tlp_LogAndCreateClipsBtn.Controls.Add(btn_CreateClips, 1, 0);
             tlp_LogAndCreateClipsBtn.Dock = DockStyle.Fill;
             tlp_LogAndCreateClipsBtn.Location = new Point(0, 0);
+            tlp_LogAndCreateClipsBtn.Margin = new Padding(4);
             tlp_LogAndCreateClipsBtn.Name = "tlp_LogAndCreateClipsBtn";
             tlp_LogAndCreateClipsBtn.RowCount = 1;
             tlp_LogAndCreateClipsBtn.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlp_LogAndCreateClipsBtn.Size = new Size(793, 60);
+            tlp_LogAndCreateClipsBtn.Size = new Size(880, 62);
             tlp_LogAndCreateClipsBtn.TabIndex = 0;
             // 
             // rtb_Log
@@ -440,13 +356,13 @@ namespace VinesauceVODClipper
             rtb_Log.BackColor = SystemColors.MenuBar;
             rtb_Log.BorderStyle = BorderStyle.None;
             rtb_Log.Dock = DockStyle.Fill;
-            rtb_Log.Font = new Font("Microsoft Sans Serif", 8F);
+            rtb_Log.Font = new Font("Microsoft Sans Serif", 10F);
             rtb_Log.ForeColor = Color.Gray;
-            rtb_Log.Location = new Point(2, 3);
-            rtb_Log.Margin = new Padding(2, 3, 2, 3);
+            rtb_Log.Location = new Point(3, 4);
+            rtb_Log.Margin = new Padding(3, 4, 3, 4);
             rtb_Log.Name = "rtb_Log";
             rtb_Log.ReadOnly = true;
-            rtb_Log.Size = new Size(670, 54);
+            rtb_Log.Size = new Size(742, 54);
             rtb_Log.TabIndex = 10;
             rtb_Log.Text = "Created by ShrineFox";
             // 
@@ -462,7 +378,8 @@ namespace VinesauceVODClipper
             btn_CreateClips.HoverColor = Color.FromArgb(95, 207, 255);
             btn_CreateClips.HoverTextColor = Color.White;
             btn_CreateClips.IsDerivedStyle = true;
-            btn_CreateClips.Location = new Point(677, 3);
+            btn_CreateClips.Location = new Point(752, 4);
+            btn_CreateClips.Margin = new Padding(4);
             btn_CreateClips.Name = "btn_CreateClips";
             btn_CreateClips.NormalBorderColor = Color.FromArgb(65, 177, 225);
             btn_CreateClips.NormalColor = Color.FromArgb(65, 177, 225);
@@ -470,7 +387,7 @@ namespace VinesauceVODClipper
             btn_CreateClips.PressBorderColor = Color.FromArgb(35, 147, 195);
             btn_CreateClips.PressColor = Color.FromArgb(35, 147, 195);
             btn_CreateClips.PressTextColor = Color.White;
-            btn_CreateClips.Size = new Size(113, 54);
+            btn_CreateClips.Size = new Size(124, 54);
             btn_CreateClips.Style = MetroSet_UI.Enums.Style.Light;
             btn_CreateClips.StyleManager = null;
             btn_CreateClips.TabIndex = 11;
@@ -482,26 +399,28 @@ namespace VinesauceVODClipper
             // MainForm
             // 
             AllowDrop = true;
-            AutoScaleDimensions = new SizeF(10F, 22F);
+            AutoScaleDimensions = new SizeF(13F, 26F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundColor = Color.FromArgb(30, 30, 30);
-            ClientSize = new Size(797, 472);
+            ClientSize = new Size(884, 499);
             Controls.Add(splitContainer_Main);
             Controls.Add(menuStrip1);
-            Font = new Font("Microsoft Sans Serif", 11F);
+            DropShadowEffect = false;
+            Font = new Font("Microsoft Sans Serif", 13F);
             FormBorderStyle = FormBorderStyle.Sizable;
             HeaderHeight = -40;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
-            Margin = new Padding(2, 3, 2, 3);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "MainForm";
             Opacity = 0.99D;
             Padding = new Padding(2, 0, 2, 2);
-            ShowBorder = true;
             ShowHeader = true;
             ShowLeftRect = false;
+            SizeGripStyle = SizeGripStyle.Hide;
+            SmallRectThickness = 0;
             Style = MetroSet_UI.Enums.Style.Dark;
-            Text = "Vinesauce VOD Clipper v1.2";
+            Text = "Vinesauce VOD Clipper v1.2.1";
             TextColor = Color.White;
             ThemeName = "MetroDark";
             tlp_Main.ResumeLayout(false);
@@ -512,10 +431,6 @@ namespace VinesauceVODClipper
             tlp_TxtFile.ResumeLayout(false);
             tlp_TxtFile.PerformLayout();
             groupBox_VideoList.ResumeLayout(false);
-            pnl_VideoList.ResumeLayout(false);
-            pnl_VideoList.PerformLayout();
-            tlp_VideoList.ResumeLayout(false);
-            tlp_VideoList.PerformLayout();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             splitContainer_Main.Panel1.ResumeLayout(false);
@@ -541,15 +456,10 @@ namespace VinesauceVODClipper
         private GroupBox groupBox_VideoList;
         private RichTextBox rtb_Instructions;
         private Panel pnl_VideoList;
-        private TableLayoutPanel tlp_VideoList;
         private TextBox textBox1;
         private Button button1;
         private TextBox textBox2;
         private Button button2;
-        private Label lbl_Title;
-        private Label lbl_VideoPath;
-        private Label lbl_StartTime;
-        private Label lbl_EndTime;
         private TextBox textBox6;
         private TextBox textBox5;
         private TextBox textBox4;

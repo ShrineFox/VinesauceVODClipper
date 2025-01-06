@@ -91,6 +91,7 @@ namespace VinesauceVODClipper
                     CreateVideoListControls();
                 }
                 rtb_Log.Text = "";
+                groupBox_VideoList.Text = "Videos to Generate Clips From";
                 Output.Log($"Done reading {videoList.Count} entries from file:\n\t{txtPath}", ConsoleColor.Green);
             }
         }
@@ -122,7 +123,7 @@ namespace VinesauceVODClipper
                 AutoSize = true,
                 AutoScroll = false,
                 AllowDrop = true,
-                Size = new Size(793, 22),
+                Size = new Size(783, 22),
                 Location = new Point(0, 0),
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 CellBorderStyle = TableLayoutPanelCellBorderStyle.Single,
