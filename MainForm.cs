@@ -154,7 +154,7 @@ namespace VinesauceVODClipper
             for (int i = 0; i < videoList.Count; i++)
             {
                 tlp.RowStyles.Add(new RowStyle());
-                Label lbl_VideoNumber = new Label() { Text = $"#{i+1}", Dock = DockStyle.Fill, Name = $"lbl_VideoNumber_{i}", AllowDrop = true, AutoSize = true };
+                Label lbl_VideoNumber = new Label() { Text = $"#{i + 1}", Dock = DockStyle.Fill, Name = $"lbl_VideoNumber_{i}", AllowDrop = true, AutoSize = true };
                 lbl_VideoNumber.DragEnter += DragEnter;
                 lbl_VideoNumber.DragDrop += VideoDragDrop;
                 Label lbl_VideoTitle = new Label() { Text = videoList[i].Title, Dock = DockStyle.Fill, Name = $"lbl_VideoTitle_{i}", AllowDrop = true, AutoSize = true };
@@ -163,7 +163,7 @@ namespace VinesauceVODClipper
                 TextBox txt_VideoPath = new TextBox() { Text = "", Dock = DockStyle.Fill, Name = $"txt_VideoPath_{i}", AllowDrop = true, BorderStyle = BorderStyle.None };
                 txt_VideoPath.DragEnter += DragEnter;
                 txt_VideoPath.DragDrop += VideoDragDrop;
-                Button btn_VideoPath = new Button() { Text = "...", Dock = DockStyle.Fill, Name = $"btn_VideoPath_{i}", AllowDrop = true, Size = new Size(100,30) };
+                Button btn_VideoPath = new Button() { Text = "...", Dock = DockStyle.Fill, Name = $"btn_VideoPath_{i}", AllowDrop = true, Size = new Size(100, 30) };
                 btn_VideoPath.DragEnter += DragEnter;
                 btn_VideoPath.DragDrop += VideoDragDrop;
                 btn_VideoPath.Click += VideoPathBtnClick;
@@ -273,9 +273,9 @@ namespace VinesauceVODClipper
                 string avoidNegativeTSArgs = "";
                 if (avoidNegativeTimestampsToolStripMenuItem.Checked)
                     avoidNegativeTSArgs += $" -avoid_negative_ts {toolStripComboBox_AvoidNegativeTS.ComboBox.SelectedItem.ToString()}";
-                
+
                 // Create clip from video in output directory without re-encoding
-                string args = $"-i \"{video.Path}\" -ss {video.StartTime} -to {video.EndTime} -map 0 -c copy{avoidNegativeTSArgs} \"{outputFilePath}\"";
+                string args = $"-i \"{video.Path}\" -ss {video.StartTime} -to {video.EndTime} -map 0 -c copy{avoidNegativeTSArgs} \"{outputFilePath}\" -report";
 
                 Output.Log($"Running ffmpeg with args:\n\t{args}");
                 Exe.Run(ffmpegPath, args, hideWindow: false);
@@ -391,7 +391,7 @@ namespace VinesauceVODClipper
                 foreach (var file in selectedFiles)
                 {
                     string outputFilePath = FileSys.CreateUniqueFilePath(Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file)) + " (Re-Encoded)" + Path.GetExtension(file));
-                    string args = $"-i \"{file}\"  -y -map 0 -c copy -c:a aac \"{outputFilePath}\"";
+                    string args = $"-i \"{file}\"  -y -map 0 -c copy -c:a aac \"{outputFilePath}\" -report";
                     Output.Log($"Running ffmpeg with args:\n\t{args}");
                     Exe.Run(ffmpegPath, args, hideWindow: false);
                     using (FileSys.WaitForFile(outputFilePath)) { };
