@@ -4,26 +4,8 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationIcon>vineshroom.ico</ApplicationIcon>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Include="vineshroom.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ShrineFox.IO\ShrineFox.IO.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Dependencies\ffmpeg.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Dependencies\Place ffmpeg.exe here.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 
 </Project>

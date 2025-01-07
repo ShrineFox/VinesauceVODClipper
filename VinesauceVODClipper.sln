@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35521.163
+VisualStudioVersion = 17.12.35521.163 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinesauceVODClipper", "VinesauceVODClipper.csproj", "{690F18EA-E43B-41FF-BB0F-2186FEC22CBC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShrineFox.IO", "..\ShrineFox.IO\ShrineFox.IO.csproj", "{7640412A-7372-4925-B20C-0178D8818A8F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinesauceVODClipper", "VinesauceVODClipper.csproj", "{C83B15E3-64DE-471B-9FC3-93AA3E9C2E13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{690F18EA-E43B-41FF-BB0F-2186FEC22CBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{690F18EA-E43B-41FF-BB0F-2186FEC22CBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{690F18EA-E43B-41FF-BB0F-2186FEC22CBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{690F18EA-E43B-41FF-BB0F-2186FEC22CBC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7640412A-7372-4925-B20C-0178D8818A8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7640412A-7372-4925-B20C-0178D8818A8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7640412A-7372-4925-B20C-0178D8818A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7640412A-7372-4925-B20C-0178D8818A8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C83B15E3-64DE-471B-9FC3-93AA3E9C2E13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C83B15E3-64DE-471B-9FC3-93AA3E9C2E13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C83B15E3-64DE-471B-9FC3-93AA3E9C2E13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C83B15E3-64DE-471B-9FC3-93AA3E9C2E13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
