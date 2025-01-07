@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:VinesauceVODClipper"
         mc:Ignorable="d"
         Title="VinesauceVODClipper 1.3" Height="450" Width="800" BorderBrush="#FF68BA6A" Foreground="White">
+
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FF68BA6A"/>
@@ -17,20 +18,20 @@
         <DockPanel>
             <!--Menustrip-->
             <Menu DockPanel.Dock="Top" Background="#FF68BA6A" Foreground="White">
-                <MenuItem Header="_File" Background="#FF68BA6A">
-                    <MenuItem Header="_Import Video List" Foreground="White" Background="#FF68BA6A" />
-                    <MenuItem Header="_Export Video List" Foreground="#FFFFFDFD" Background="#FF68BA6A" />
+                <MenuItem Header="_File" Background="#FF68BA6A" BorderThickness="0">
+                    <MenuItem Header="_Import Video List" Foreground="White" Background="#FF68BA6A" BorderThickness="0"  />
+                    <MenuItem Header="_Export Video List" Foreground="#FFFFFDFD" Background="#FF68BA6A" BorderThickness="0" />
                 </MenuItem>
-                <MenuItem Header="_Options" Background="#FF68BA6A">
-                    <MenuItem Foreground="White" Background="#FF68BA6A">
+                <MenuItem Header="_Options" Background="#FF68BA6A" BorderThickness="0">
+                    <MenuItem Foreground="White" Background="#FF68BA6A" BorderThickness="0">
                         <MenuItem.Header>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Avoid Negative Timestamps: " VerticalAlignment="Center" Foreground="White" Background="#FF68BA6A"/>
-                                <ComboBox Name="_TimeStampModeComboBox" Width="150" SelectedIndex="0" Background="#FF68BA6A" Foreground="White">
-                                    <ComboBoxItem Content="make_zero"/>
-                                    <ComboBoxItem Content="make_non_negative"/>
-                                    <ComboBoxItem Content="auto"/>
-                                    <ComboBoxItem Content="disabled"/>
+                                <ComboBox Name="_TimeStampModeComboBox" Width="150" SelectedIndex="0" Background="#FF68BA6A" Foreground="White" BorderThickness="0">
+                                    <ComboBoxItem Content="make_zero" BorderThickness="0"/>
+                                    <ComboBoxItem Content="make_non_negative" BorderThickness="0"/>
+                                    <ComboBoxItem Content="auto" BorderThickness="0"/>
+                                    <ComboBoxItem Content="disabled" BorderThickness="0"/>
                                 </ComboBox>
                             </StackPanel>
                         </MenuItem.Header>
@@ -83,7 +84,13 @@
                     </GroupBox>
                     <GroupBox Header="_Videos To Generate Clips From" Grid.Row="1" BorderThickness="0,0,0,0" Grid.ColumnSpan="2">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <DataGrid Name="_VideosDataGrid" HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="Transparent" BorderBrush="#FF68BA6A" Foreground="White">
+                            <DataGrid Name="_VideosDataGrid" HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="Transparent" BorderBrush="#FF68BA6A" Foreground="White" ItemsSource="{Binding DataGridItems}" AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Foreground="White" Width="3*"/>
+                                    <DataGridTextColumn Header="Path" Binding="{Binding Path}" Foreground="White" Width="2*"/>
+                                    <DataGridTextColumn Header="StartTime" Binding="{Binding StartTime}" Foreground="White" MinWidth="80"/>
+                                    <DataGridTextColumn Header="EndTime" Binding="{Binding EndTime}" Foreground="White" MinWidth="80"/>
+                                </DataGrid.Columns>
                             </DataGrid>
                         </ScrollViewer>
                     </GroupBox>
