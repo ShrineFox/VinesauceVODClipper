@@ -6,28 +6,41 @@
         xmlns:local="clr-namespace:VinesauceVODClipper"
         mc:Ignorable="d"
         Title="VinesauceVODClipper 1.3" Height="450" Width="800" BorderBrush="#FF68BA6A" Foreground="White">
+    <Window.Resources>
+        <!-- DECLARING MERGED DICTIONARY -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source='Styles/ButtonCustomStyle.xaml' />
+                <ResourceDictionary Source='Styles/ComboBoxCustomStyle.xaml' />
+                <ResourceDictionary Source='Styles/DataGridCustomStyle.xaml' />
+                <ResourceDictionary Source='Styles/GroupBoxCustomStyle.xaml' />
+                <ResourceDictionary Source='Styles/MenuItemCustomStyle.xaml' />
+                <ResourceDictionary Source='Styles/TextBoxCustomStyle.xaml' />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
 
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FF68BA6A"/>
             <GradientStop Color="#FF2C3592" Offset="1"/>
-            <GradientStop Color="#FF2C3691" Offset="0.99"/>
         </LinearGradientBrush>
     </Window.Background>
+    
     <Grid>
         <DockPanel>
             <!--Menustrip-->
             <Menu DockPanel.Dock="Top" Background="#FF68BA6A" Foreground="White">
-                <MenuItem Header="_File" Background="#FF68BA6A" BorderThickness="0">
-                    <MenuItem Header="_Import Video List" Foreground="White" Background="#FF68BA6A" BorderThickness="0"  />
-                    <MenuItem Header="_Export Video List" Foreground="#FFFFFDFD" Background="#FF68BA6A" BorderThickness="0" />
+                <MenuItem Header="_File" Margin="5">
+                    <MenuItem Header="_Import Video List"  />
+                    <MenuItem Header="_Export Video List" />
                 </MenuItem>
-                <MenuItem Header="_Options" Background="#FF68BA6A" BorderThickness="0">
-                    <MenuItem Foreground="White" Background="#FF68BA6A" BorderThickness="0">
+                <MenuItem Header="_Options" Margin="5">
+                    <MenuItem>
                         <MenuItem.Header>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Avoid Negative Timestamps: " VerticalAlignment="Center" Foreground="White" Background="#FF68BA6A"/>
-                                <ComboBox Name="_TimeStampModeComboBox" Width="150" SelectedIndex="0" Background="#FF68BA6A" Foreground="White" BorderThickness="0">
+                                <ComboBox Name="_TimeStampModeComboBox" Width="150" SelectedIndex="0" >
                                     <ComboBoxItem Content="make_zero" BorderThickness="0"/>
                                     <ComboBoxItem Content="make_non_negative" BorderThickness="0"/>
                                     <ComboBoxItem Content="auto" BorderThickness="0"/>
@@ -56,47 +69,33 @@
                         <RowDefinition Height="*" MinHeight="25" Name="_VideoClipsArea" />
                     </Grid.RowDefinitions>
                     <!--Output Clips Folder Browser-->
-                    <GroupBox Header="_Output Clips Folder" Grid.Row="0" BorderThickness="0,0,0,0" BorderBrush="#0068BA6A" Grid.ColumnSpan="2">
-                        <Grid Background="#012E0A0A" Margin="5,0,5,0">
+                    <GroupBox Header="_Output Clips Folder" Grid.Row="0" Grid.ColumnSpan="2">
+                        <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="9*" />
                                 <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="60" />
                             </Grid.ColumnDefinitions>
-                            <TextBox Name="_OutputClipsDirTxtBox" Grid.Column="0" Height="20" MinHeight="20" BorderBrush="#FF2C3691" Margin="5,0,5,0" Foreground="White">
-                                <TextBox.Background>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#FF68BA6A"/>
-                                        <GradientStop Color="White" Offset="1"/>
-                                        <GradientStop Color="#7F2C3691" Offset="0.993"/>
-                                    </LinearGradientBrush>
-                                </TextBox.Background>
-                            </TextBox>
-                            <Button Name="_OutputClipsDirBtn" Grid.Column="1" Height="20" MinHeight="20" BorderBrush="#FF2C3691" Margin="5,0,5,0" Foreground="White">
-                                <Button.Background>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="Black"/>
-                                        <GradientStop Color="#FF2C3691" Offset="1"/>
-                                        <GradientStop Color="#FF68BA6A" Offset="0.022"/>
-                                    </LinearGradientBrush>
-                                </Button.Background> ...
+                            <TextBox Name="_OutputClipsDirTxtBox" Grid.Column="0"/>
+                            <Button Name="_OutputClipsDirBtn" Grid.Column="1" Height="20" MinHeight="20">
+                                 ...
                             </Button>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="_Videos To Generate Clips From" Grid.Row="1" BorderThickness="0,0,0,0" Grid.ColumnSpan="2">
+                    <GroupBox Header="_Videos To Generate Clips From" Grid.Row="1" Grid.ColumnSpan="2">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <DataGrid Name="_VideosDataGrid" HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="Transparent" BorderBrush="#FF68BA6A" Foreground="White" ItemsSource="{Binding DataGridItems}" AutoGenerateColumns="False">
+                            <DataGrid Name="_VideosDataGrid" HorizontalAlignment="Stretch" VerticalAlignment="Top" ItemsSource="{Binding DataGridItems}" AutoGenerateColumns="False" Background="Transparent" BorderBrush="Transparent">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Foreground="White" Width="3*"/>
-                                    <DataGridTextColumn Header="Path" Binding="{Binding Path}" Foreground="White" Width="2*"/>
-                                    <DataGridTextColumn Header="StartTime" Binding="{Binding StartTime}" Foreground="White" MinWidth="80"/>
-                                    <DataGridTextColumn Header="EndTime" Binding="{Binding EndTime}" Foreground="White" MinWidth="80"/>
+                                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="3*"/>
+                                    <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="2*"/>
+                                    <DataGridTextColumn Header="StartTime" Binding="{Binding StartTime}" MinWidth="80"/>
+                                    <DataGridTextColumn Header="EndTime" Binding="{Binding EndTime}" MinWidth="80"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </ScrollViewer>
                     </GroupBox>
                 </Grid>
-                <GridSplitter Grid.Row="1" Height="5" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ResizeDirection="Rows" Background="#5968BA6A" Foreground="#59FFFFFF" />
-                <RichTextBox Name="_Log" Grid.Row="2" MinHeight="50" IsReadOnly="True" Background="{x:Null}"/>
+                <GridSplitter Grid.Row="1" Height="5" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ResizeDirection="Rows" Background="#5968BA6A" />
+                <RichTextBox Name="_Log" Grid.Row="2" MinHeight="50" IsReadOnly="True" Background="Transparent" Foreground="White"/>
             </Grid>
         </DockPanel>
     </Grid>
