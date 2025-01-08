@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VinesauceVODClipper"
+        xmlns:local="clr-namespace:VinesauceVODClipper" xmlns:control="clr-namespace:VinesauceVODClipper.Controls"
         mc:Ignorable="d"
         Title="VinesauceVODClipper 1.3" Height="450" Width="800" BorderBrush="#FF68BA6A" Foreground="White">
     <Window.Resources>
@@ -60,33 +60,26 @@
                     <RowDefinition Height="*" MinHeight="25" Name="_LogArea" />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="337*"/>
-                        <ColumnDefinition Width="463*"/>
-                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="50" MinHeight="50" Name="_ClipsFolderArea" />
+                        <RowDefinition Height="60" MinHeight="60" Name="_ClipsFolderArea" />
                         <RowDefinition Height="*" MinHeight="25" Name="_VideoClipsArea" />
                     </Grid.RowDefinitions>
                     <!--Output Clips Folder Browser-->
                     <GroupBox Header="_Output Clips Folder" Grid.Row="0" Grid.ColumnSpan="2">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="60" />
-                            </Grid.ColumnDefinitions>
-                            <TextBox Name="_OutputClipsDirTxtBox" Grid.Column="0"/>
-                            <Button Name="_OutputClipsDirBtn" Grid.Column="1" Height="20" MinHeight="20">
-                                 ...
-                            </Button>
-                        </Grid>
+                        <control:BrowseField/>
                     </GroupBox>
                     <GroupBox Header="_Videos To Generate Clips From" Grid.Row="1" Grid.ColumnSpan="2">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <DataGrid Name="_VideosDataGrid" HorizontalAlignment="Stretch" VerticalAlignment="Top" ItemsSource="{Binding DataGridItems}" AutoGenerateColumns="False" Background="Transparent" BorderBrush="Transparent">
+                                <DataGrid.Resources>
+                                    <DataTemplate x:Key="BrowseTemplate">
+                                        <control:BrowseField/>
+                                    </DataTemplate>
+                                </DataGrid.Resources>
+
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="3*"/>
-                                    <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="2*"/>
+                                    <DataGridTemplateColumn Header="Path" Width="2*" CellTemplate="{StaticResource BrowseTemplate}"/>
                                     <DataGridTextColumn Header="StartTime" Binding="{Binding StartTime}" MinWidth="80"/>
                                     <DataGridTextColumn Header="EndTime" Binding="{Binding EndTime}" MinWidth="80"/>
                                 </DataGrid.Columns>
@@ -94,8 +87,10 @@
                         </ScrollViewer>
                     </GroupBox>
                 </Grid>
-                <GridSplitter Grid.Row="1" Height="5" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ResizeDirection="Rows" Background="#5968BA6A" />
-                <RichTextBox Name="_Log" Grid.Row="2" MinHeight="50" IsReadOnly="True" Background="Transparent" Foreground="White"/>
+                <GridSplitter Grid.Row="1" Height="5" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ResizeDirection="Rows" Background="Transparent" />
+                <GroupBox Header="_Log" Grid.Row="2">
+                    <RichTextBox Name="_Log" BorderBrush="Transparent" MinHeight="50" IsReadOnly="True" Background="Transparent" Foreground="White"/>
+                </GroupBox>
             </Grid>
         </DockPanel>
     </Grid>
