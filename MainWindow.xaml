@@ -73,7 +73,7 @@
                             <DataGrid Name="_VideosDataGrid" HorizontalAlignment="Stretch" VerticalAlignment="Top" ItemsSource="{Binding DataGridItems}" AutoGenerateColumns="False" Background="Transparent" BorderBrush="Transparent">
                                 <DataGrid.Resources>
                                     <DataTemplate x:Key="BrowseTemplate">
-                                        <control:BrowseField/>
+                                        <control:BrowseField Text="{Binding Path}"/>
                                     </DataTemplate>
                                 </DataGrid.Resources>
 

@@ -24,9 +24,10 @@ namespace VinesauceVODClipper
         public MainWindow()
         {
             InitializeComponent();
+            
             this.viewModel = new ViewModel()
             {
-                DataGridItems = new List<DataGridItem>() { new DataGridItem() {  Title = "Test lol" } }
+                DataGridItems = new List<DataGridItem>() { new DataGridItem() {  Title = "Test lol", Path = @"C:\Path\To\FullVOD.mp4" } },
             };
             this.DataContext = this.viewModel;
             ffmpegPath = System.IO.Path.Combine(Exe.Directory(), "Dependencies//ffmpeg.exe");

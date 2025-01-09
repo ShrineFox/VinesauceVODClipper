@@ -20,9 +20,23 @@ namespace VinesauceVODClipper.Controls
     /// </summary>
     public partial class BrowseField : UserControl
     {
+        // Dependency Property for Text
+        public static readonly DependencyProperty TextProperty =
+            DependencyProperty.Register("Text", typeof(string), typeof(BrowseField),
+                new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public string Text
+        {
+            get => (string)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
+        }
+
         public BrowseField()
         {
             InitializeComponent();
+            // Bind the internal TextBox.Text to the custom Text property
+            _BrowseTxtBox.SetBinding(TextBox.TextProperty, new Binding("Text") { Source = this, Mode = BindingMode.TwoWay });
+
         }
     }
 }
