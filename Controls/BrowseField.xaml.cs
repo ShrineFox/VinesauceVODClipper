@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace VinesauceVODClipper.Controls
 {
@@ -36,7 +37,15 @@ namespace VinesauceVODClipper.Controls
             InitializeComponent();
             // Bind the internal TextBox.Text to the custom Text property
             _BrowseTxtBox.SetBinding(TextBox.TextProperty, new Binding("Text") { Source = this, Mode = BindingMode.TwoWay });
+        }
 
+        // Define a public event that other forms can subscribe to
+        public event EventHandler ButtonClicked;
+
+        // Raise the ButtonClicked event when the button is clicked
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonClicked?.Invoke(this, EventArgs.Empty);
         }
     }
 }

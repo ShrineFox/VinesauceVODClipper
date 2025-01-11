@@ -10,6 +10,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ShrineFox.IO;
 using System.IO;
+using VinesauceVODClipper.Controls;
 
 namespace VinesauceVODClipper
 {
@@ -31,6 +32,20 @@ namespace VinesauceVODClipper
             };
             this.DataContext = this.viewModel;
             ffmpegPath = System.IO.Path.Combine(Exe.Directory(), "Dependencies//ffmpeg.exe");
+
+            // Subscribe to the ButtonClicked event of the UserControl
+            OutputDirBrowseField.ButtonClicked += OutputDirBrowseField_ButtonClicked;
         }
+
+        private void OutputDirBrowseField_ButtonClicked(object sender, EventArgs e)
+        {
+            MessageBox.Show("Output dir clicked!");
+        }
+
+        private void VideoGridBrowseField_ButtonClicked(object sender, EventArgs e)
+        {
+            MessageBox.Show("Video Grid dir clicked!");
+        }
+
     }
 }
