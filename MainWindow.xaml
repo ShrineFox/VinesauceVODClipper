@@ -15,6 +15,7 @@
                 <ResourceDictionary Source='Styles/DataGridCustomStyle.xaml' />
                 <ResourceDictionary Source='Styles/GroupBoxCustomStyle.xaml' />
                 <ResourceDictionary Source='Styles/MenuItemCustomStyle.xaml' />
+                <ResourceDictionary Source='Styles/RichTextBoxCustomStyle.xaml' />
                 <ResourceDictionary Source='Styles/TextBoxCustomStyle.xaml' />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -70,22 +71,23 @@
                         <control:BrowseField x:Name="OutputDirBrowseField"/>
                     </GroupBox>
                     <GroupBox Header="_Videos To Generate Clips From" Grid.Row="1" Grid.ColumnSpan="2">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <DataGrid Name="_VideosDataGrid" HorizontalAlignment="Stretch" VerticalAlignment="Top" ItemsSource="{Binding DataGridItems}" AutoGenerateColumns="False" Background="Transparent" BorderBrush="Transparent">
-                                <DataGrid.Resources>
-                                    <DataTemplate x:Key="BrowseTemplate">
-                                        <control:BrowseField Text="{Binding Path}" ButtonClicked="VideoGridBrowseField_ButtonClicked"/>
-                                    </DataTemplate>
-                                </DataGrid.Resources>
+                        <DataGrid Name="_VideosDataGrid" HorizontalAlignment="Stretch" ScrollViewer.PanningMode="VerticalFirst"
+                                  VerticalAlignment="Top" ItemsSource="{Binding DataGridItems}" AutoGenerateColumns="False" 
+                                  Background="Transparent" BorderBrush="Transparent" LoadingRow="DataGrid_LoadingRow">
+                            <DataGrid.Resources>
+                                <DataTemplate x:Key="BrowseTemplate">
+                                    <control:BrowseField Text="{Binding Path}" ButtonClicked="VideoGridBrowseField_ButtonClicked"/>
+                                </DataTemplate>
+                            </DataGrid.Resources>
 
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="3*"/>
-                                    <DataGridTemplateColumn Header="Path" Width="2*" CellTemplate="{StaticResource BrowseTemplate}" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="StartTime" Binding="{Binding StartTime}" MinWidth="80"/>
-                                    <DataGridTextColumn Header="EndTime" Binding="{Binding EndTime}" MinWidth="80"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </ScrollViewer>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="4*"/>
+                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*"/>
+                                <DataGridTemplateColumn Header="Path" Width="2*" CellTemplate="{StaticResource BrowseTemplate}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Start Time" Binding="{Binding StartTime}" MinWidth="80"/>
+                                <DataGridTextColumn Header="End Time" Binding="{Binding EndTime}" MinWidth="80"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </GroupBox>
                 </Grid>
                 <GridSplitter Grid.Row="1" Height="5" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ResizeDirection="Rows" Background="Transparent" />
@@ -94,8 +96,8 @@
                         <ColumnDefinition Width="8*" MinWidth="75" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <GroupBox Header="_Log" Grid.Column="0">
-                        <RichTextBox Name="_Log" MinHeight="50" Foreground="White" Background="Transparent" BorderBrush="Transparent" VerticalScrollBarVisibility="Visible" IsReadOnly="True" />
+                    <GroupBox Header="_Log" Grid.Column="0" Margin="5,0,0,5">
+                        <RichTextBox Name="_Log" MinHeight="50" Foreground="White" Background="Transparent" BorderBrush="Transparent" VerticalScrollBarVisibility="Visible" IsReadOnly="True"  />
                     </GroupBox>
                     <Button Name="CreateClipsBtn" Grid.Column="1" BorderBrush="White">
                         Create Clips

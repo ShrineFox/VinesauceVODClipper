@@ -47,7 +47,7 @@ namespace VinesauceVODClipper
                 return;
             }
 
-            viewModel.DataGridItems = new ObservableCollection<DataGridItem>();
+            viewModel.DataGridItems = new ObservableCollection<DataGridItem>() { new DataGridItem() };
         }
 
         private void OutputDirBrowseField_ButtonClicked(object sender, EventArgs e)
@@ -79,11 +79,72 @@ namespace VinesauceVODClipper
 
         private void ImportList_Click(object sender, EventArgs e)
         {
-            var selectedFiles = WinFormsDialogs.SelectFile("Choose .txt with Timestamps", false, new string[] { "Text Document (.txt)" });
+            var selectedFiles = WinFormsDialogs.SelectFile("Import .tsv File", false, new string[] { "Tab-Separated Values File (.tsv)" });
             if (selectedFiles.Count > 0 && File.Exists(selectedFiles.First()))
             {
-                ImportTxtFile(selectedFiles.First());
+                ImportTsvFile(selectedFiles.First());
             }
+        }
+
+        private void ImportTsvFile(string txtPath)
+        {
+            var tsvLines = File.ReadAllLines(txtPath);
+            List<DataGridItem> videoList = new List<DataGridItem>();
+
+            // Create new video list
+            for (int i = 0; i < tsvLines.Length; i++)
+            {
+                var splitLine = tsvLines[i].Trim().Split('\t');
+
+                if (splitLine.Length >= 5)
+                {
+                    DataGridItem video = new DataGridItem();
+
+                    video.Title = splitLine[0];
+                    video.Description = splitLine[1];
+
+                    if (video.Title != "Title" && video.Description != "Description")
+                    {
+                        video.Path = splitLine[2];
+
+                        // Attempt to get timestamps from .tsv line
+                        string startTime = TimestampStringToHourFormat(splitLine[splitLine.Length - 2]);
+                        try
+                        {
+                            video.StartTime = TimeSpan.Parse(startTime);
+                        }
+                        catch
+                        {
+                            LogText($"Syntax error on line {i + 1}: Invalid Start Time timestamp: \"{startTime}\"" +
+                                $"\nFormat must be hh:mm:ss");
+                        }
+                        string endTime = TimestampStringToHourFormat(splitLine.Last());
+                        try
+                        {
+                            video.EndTime = TimeSpan.Parse(endTime);
+                        }
+                        catch
+                        {
+                            LogText($"Syntax error on line {i + 1}: Invalid End Time timestamp: \"{endTime}\"" +
+                                $"\nFormat must be hh:mm:ss");
+                        }
+
+                        // Join all strings except the last two timestamps to create Title
+                        videoList.Add(video);
+                    }
+                    else
+                    {
+                        LogText($"Skipping line {i + 1}: Suspected header line (starts with \"Title\tDescription\")");
+                    }
+                }
+                else
+                    LogText($"Syntax error on line {i + 1}: Not enough columns separated by Tab character. Expected:" +
+                        $"\nTitle\tDescription\tPath\tStartTime\tEndTime");
+            }
+
+            foreach(var item in videoList)
+                viewModel.DataGridItems.Add(item);
+            LogText($"Imported {videoList.Count} rows from file: {txtPath}");
         }
 
         private string TimestampStringToHourFormat(string timeStamp)
@@ -96,58 +157,15 @@ namespace VinesauceVODClipper
             return timeStamp;
         }
 
-        private void ImportTxtFile(string txtPath)
-        {
-            var txtLines = File.ReadAllLines(txtPath);
-            List<DataGridItem> videoList = new List<DataGridItem>();
-
-            // Create new video list
-            for (int i = 0; i < txtLines.Length; i++)
-            {
-                var splitLine = txtLines[i].Trim().Split(' ');
-
-                if (splitLine.Length < 3)
-                    LogText($"Syntax error on line {i + 1}: Missing timestamp?\n\t{txtLines[i]}");
-                else
-                {
-                    DataGridItem video = new DataGridItem();
-
-                    // Attempt to get timestamps from .txt line
-                    string startTime = TimestampStringToHourFormat(splitLine[splitLine.Length - 2]);
-                    try
-                    {
-                        video.StartTime = TimeSpan.Parse(startTime);
-                    }
-                    catch
-                    {
-                        LogText($"Syntax error on line {i + 1}: Invalid Start Time timestamp: \"{startTime}\"" +
-                            $"\nFormat must be hh:mm:ss");
-                    }
-                    string endTime = TimestampStringToHourFormat(splitLine.Last());
-                    try
-                    {
-                        video.EndTime = TimeSpan.Parse(endTime);
-                    }
-                    catch
-                    {
-                        LogText($"Syntax error on line {i + 1}: Invalid End Time timestamp: \"{endTime}\"" +
-                            $"\nFormat must be hh:mm:ss");
-                    }
-
-                    // Join all strings except the last two timestamps to create Title
-                    video.Title = string.Join(" ", splitLine, 0, splitLine.Length - 2);
-                    videoList.Add(video);
-                }
-            }
-
-            foreach(var item in videoList)
-                viewModel.DataGridItems.Add(item);
-            LogText($"Imported {videoList.Count} rows from file: {txtPath}");
-        }
-
         private void LogText(string text)
         {
             _Log.AppendText($"\n[{DateTime.Now.ToString("HH:mm tt")}] {text}");
+        }
+
+        // Add row numbers to DataGrid
+        void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex()).ToString();
         }
     }
 }

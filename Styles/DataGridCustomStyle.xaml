@@ -4,17 +4,23 @@
 	<Style TargetType="{x:Type DataGridColumnHeader}">
 		<Setter Property="Background" Value="Transparent" />
 		<Setter Property="Foreground" Value="White" />
-	</Style>
+        <Setter Property="Margin" Value="0,0,0,0" />
+    </Style>
+
+    <Style TargetType="{x:Type DataGridRowHeader}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
 
     <Style TargetType="{x:Type DataGrid}">
         <EventSetter Event="GotFocus" Handler="DataGridCell_GotFocus" />
-
+        <Setter Property="AlternationCount" Value="2"/>
+        <Setter Property="GridLinesVisibility" Value="None"/>
         <Setter Property="RowStyle" >
             <Setter.Value>
                 <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource {x:Type DataGridRow}}">
                     <Setter Property="Background" Value="Transparent" />
                     <Setter Property="Foreground" Value="White" />
-
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="Transparent" />
@@ -30,6 +36,10 @@
                                 </Setter.Value>
                             </Setter>
                             <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+
+                        <Trigger Property="AlternationIndex" Value="1">
+                            <Setter Property="Background" Value="#13000000"/>
                         </Trigger>
                     </Style.Triggers>
 
