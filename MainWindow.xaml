@@ -71,7 +71,7 @@
                     </GroupBox>
                     <GroupBox Header="_Videos To Generate Clips From" Grid.Row="1" Grid.ColumnSpan="2">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <DataGrid Name="_VideosDataGrid" HorizontalAlignment="Stretch" VerticalAlignment="Top" ItemsSource="{Binding DataGridItems}" AutoGenerateColumns="False" Background="Transparent" BorderBrush="Transparent" DataGridCell.Selected="DataGridCell_Selected">
+                            <DataGrid Name="_VideosDataGrid" HorizontalAlignment="Stretch" VerticalAlignment="Top" ItemsSource="{Binding DataGridItems}" AutoGenerateColumns="False" Background="Transparent" BorderBrush="Transparent">
                                 <DataGrid.Resources>
                                     <DataTemplate x:Key="BrowseTemplate">
                                         <control:BrowseField Text="{Binding Path}" ButtonClicked="VideoGridBrowseField_ButtonClicked"/>

@@ -19,51 +19,48 @@ namespace VinesauceVODClipper
             InitializeComponent();
         }
 
-        // The code from the myermian's answer goes here.
-        // https://stackoverflow.com/a/3426992
-        private void DataGridCell_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        // https://stackoverflow.com/a/15218130
+        private void DataGridCell_GotFocus(object sender, RoutedEventArgs e)
         {
-            DataGridCell cell = sender as DataGridCell;
-            if (cell != null && !cell.IsEditing && !cell.IsReadOnly)
+            // Lookup for the source to be DataGridCell
+            if (e.OriginalSource.GetType() == typeof(DataGridCell))
             {
-                if (!cell.IsFocused)
+                // Starts the Edit on the row;
+                DataGrid grd = (DataGrid)sender;
+                grd.BeginEdit(e);
+
+                System.Windows.Controls.Control control = GetFirstChildByType<System.Windows.Controls.Control>(e.OriginalSource as DataGridCell);
+                if (control != null)
                 {
-                    cell.Focus();
-                }
-                DataGrid dataGrid = FindVisualParent<DataGrid>(cell);
-                if (dataGrid != null)
-                {
-                    if (dataGrid.SelectionUnit != DataGridSelectionUnit.FullRow)
+                    control.Focus();
+
+                    if (control.GetType() == typeof(TextBox))
                     {
-                        if (!cell.IsSelected)
-                            cell.IsSelected = true;
-                    }
-                    else
-                    {
-                        DataGridRow row = FindVisualParent<DataGridRow>(cell);
-                        if (row != null && !row.IsSelected)
-                        {
-                            row.IsSelected = true;
-                        }
+                        TextBox txtBox = (TextBox)control;
+                        if (txtBox != null)
+                            txtBox.CaretIndex = txtBox.Text.Length;
                     }
                 }
             }
         }
 
-        static T FindVisualParent<T>(UIElement element) where T : UIElement
+        private T GetFirstChildByType<T>(DependencyObject prop) where T : DependencyObject
         {
-            UIElement parent = element;
-            while (parent != null)
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(prop); i++)
             {
-                T correctlyTyped = parent as T;
-                if (correctlyTyped != null)
-                {
-                    return correctlyTyped;
-                }
+                DependencyObject child = VisualTreeHelper.GetChild((prop), i) as DependencyObject;
+                if (child == null)
+                    continue;
 
-                parent = VisualTreeHelper.GetParent(parent) as UIElement;
+                T castedProp = child as T;
+                if (castedProp != null)
+                    return castedProp;
+
+                castedProp = GetFirstChildByType<T>(child);
+
+                if (castedProp != null)
+                    return castedProp;
             }
-
             return null;
         }
     }

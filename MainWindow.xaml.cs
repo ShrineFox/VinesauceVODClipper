@@ -145,17 +145,6 @@ namespace VinesauceVODClipper
             LogText($"Imported {videoList.Count} rows from file: {txtPath}");
         }
 
-        private void DataGridCell_Selected(object sender, RoutedEventArgs e)
-        {
-            // Lookup for the source to be DataGridCell
-            if (e.OriginalSource.GetType() == typeof(DataGridCell))
-            {
-                // Starts the Edit on the row;
-                DataGrid grd = (DataGrid)sender;
-                grd.BeginEdit(e);
-            }
-        }
-
         private void LogText(string text)
         {
             _Log.AppendText($"\n[{DateTime.Now.ToString("HH:mm tt")}] {text}");
