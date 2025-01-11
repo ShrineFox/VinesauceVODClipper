@@ -32,6 +32,7 @@
             <!--Menustrip-->
             <Menu DockPanel.Dock="Top" Background="#FF68BA6A" Foreground="White">
                 <MenuItem Header="_File" Margin="5">
+                    <MenuItem Header="_New Video List" Click="NewList_Click"/>
                     <MenuItem Header="_Import Video List" Click="ImportList_Click"/>
                     <MenuItem Header="_Export Video List" />
                 </MenuItem>
@@ -70,7 +71,7 @@
                     </GroupBox>
                     <GroupBox Header="_Videos To Generate Clips From" Grid.Row="1" Grid.ColumnSpan="2">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <DataGrid Name="_VideosDataGrid" HorizontalAlignment="Stretch" VerticalAlignment="Top" ItemsSource="{Binding DataGridItems}" AutoGenerateColumns="False" Background="Transparent" BorderBrush="Transparent">
+                            <DataGrid Name="_VideosDataGrid" HorizontalAlignment="Stretch" VerticalAlignment="Top" ItemsSource="{Binding DataGridItems}" AutoGenerateColumns="False" Background="Transparent" BorderBrush="Transparent" DataGridCell.Selected="DataGridCell_Selected">
                                 <DataGrid.Resources>
                                     <DataTemplate x:Key="BrowseTemplate">
                                         <control:BrowseField Text="{Binding Path}" ButtonClicked="VideoGridBrowseField_ButtonClicked"/>
@@ -88,9 +89,18 @@
                     </GroupBox>
                 </Grid>
                 <GridSplitter Grid.Row="1" Height="5" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ResizeDirection="Rows" Background="Transparent" />
-                <GroupBox Header="_Log" Grid.Row="2">
-                    <RichTextBox Name="_Log" BorderBrush="Transparent" MinHeight="50" IsReadOnly="True" Background="Transparent" Foreground="White"/>
-                </GroupBox>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*" MinWidth="75" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Header="_Log" Grid.Column="0">
+                        <RichTextBox Name="_Log" MinHeight="50" Foreground="White" Background="Transparent" BorderBrush="Transparent" VerticalScrollBarVisibility="Visible" IsReadOnly="True" />
+                    </GroupBox>
+                    <Button Name="CreateClipsBtn" Grid.Column="1" BorderBrush="White">
+                        Create Clips
+                    </Button>
+                </Grid>
             </Grid>
         </DockPanel>
     </Grid>

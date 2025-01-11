@@ -10,7 +10,7 @@ namespace VinesauceVODClipper
 {
     internal class ViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<DataGridItem> _dataGridItems;
+        private ObservableCollection<DataGridItem> _dataGridItems = new ObservableCollection<DataGridItem>();
         public ObservableCollection<DataGridItem> DataGridItems
         {
             get => _dataGridItems;

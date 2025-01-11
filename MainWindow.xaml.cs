@@ -13,6 +13,7 @@ using System.IO;
 using VinesauceVODClipper.Controls;
 using System.Windows.Forms;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace VinesauceVODClipper
 {
@@ -27,16 +28,26 @@ namespace VinesauceVODClipper
         public MainWindow()
         {
             InitializeComponent();
-            
-            this.viewModel = new ViewModel()
-            {
-                DataGridItems = new ObservableCollection<DataGridItem>() { new DataGridItem() {  Title = "Test lol", Path = @"C:\Path\To\FullVOD.mp4" } },
-            };
+
+            _Log.AppendText("Created by ShrineFox");
+            this.viewModel = new ViewModel();
             this.DataContext = this.viewModel;
             ffmpegPath = System.IO.Path.Combine(Exe.Directory(), "Dependencies//ffmpeg.exe");
 
             // Subscribe to the ButtonClicked event of the UserControl
             OutputDirBrowseField.ButtonClicked += OutputDirBrowseField_ButtonClicked;
+        }
+
+        private void NewList_Click(object sender, EventArgs e)
+        {
+            // Exit early if the user doesn't want to overwrite video list
+            if (viewModel.DataGridItems.Count > 0 && !WinFormsDialogs.ShowMessageBox(
+                "Reset Video List", "All unsaved work will be lost. Do you want to continue?", MessageBoxButtons.YesNo))
+            {
+                return;
+            }
+
+            viewModel.DataGridItems = new ObservableCollection<DataGridItem>();
         }
 
         private void OutputDirBrowseField_ButtonClicked(object sender, EventArgs e)
@@ -87,16 +98,8 @@ namespace VinesauceVODClipper
 
         private void ImportTxtFile(string txtPath)
         {
-            // Exit early if the user doesn't want to overwrite video list
-            if (viewModel.DataGridItems.Count > 0 && !WinFormsDialogs.ShowMessageBox(
-                "Overwrite Video List Form", "Changing the input text file will reset the current video list. " +
-                "Do you want to continue?", MessageBoxButtons.YesNo))
-            {
-                return;
-            }
-
             var txtLines = File.ReadAllLines(txtPath);
-            IList<DataGridItem> videoList = new List<DataGridItem>();
+            List<DataGridItem> videoList = new List<DataGridItem>();
 
             // Create new video list
             for (int i = 0; i < txtLines.Length; i++)
@@ -104,7 +107,7 @@ namespace VinesauceVODClipper
                 var splitLine = txtLines[i].Trim().Split(' ');
 
                 if (splitLine.Length < 3)
-                    Output.Log($"Syntax error on line {i + 1}: Missing timestamp?\n\t{txtLines[i]}", ConsoleColor.Yellow);
+                    LogText($"Syntax error on line {i + 1}: Missing timestamp?\n\t{txtLines[i]}");
                 else
                 {
                     DataGridItem video = new DataGridItem();
@@ -117,8 +120,8 @@ namespace VinesauceVODClipper
                     }
                     catch
                     {
-                        Output.Log($"Syntax error on line {i + 1}: Invalid Start Time timestamp: \"{startTime}\"" +
-                            $"\nFormat must be hh:mm:ss", ConsoleColor.Yellow);
+                        LogText($"Syntax error on line {i + 1}: Invalid Start Time timestamp: \"{startTime}\"" +
+                            $"\nFormat must be hh:mm:ss");
                     }
                     string endTime = TimestampStringToHourFormat(splitLine.Last());
                     try
@@ -127,8 +130,8 @@ namespace VinesauceVODClipper
                     }
                     catch
                     {
-                        Output.Log($"Syntax error on line {i + 1}: Invalid End Time timestamp: \"{endTime}\"" +
-                            $"\nFormat must be hh:mm:ss", ConsoleColor.Yellow);
+                        LogText($"Syntax error on line {i + 1}: Invalid End Time timestamp: \"{endTime}\"" +
+                            $"\nFormat must be hh:mm:ss");
                     }
 
                     // Join all strings except the last two timestamps to create Title
@@ -137,9 +140,25 @@ namespace VinesauceVODClipper
                 }
             }
 
-            viewModel.DataGridItems.Clear();
-            viewModel.DataGridItems = new ObservableCollection<DataGridItem>(videoList.Copy());
-            Output.Log($"Done reading {videoList.Count} entries from file:\n\t{txtPath}", ConsoleColor.Green);
+            foreach(var item in videoList)
+                viewModel.DataGridItems.Add(item);
+            LogText($"Imported {videoList.Count} rows from file: {txtPath}");
+        }
+
+        private void DataGridCell_Selected(object sender, RoutedEventArgs e)
+        {
+            // Lookup for the source to be DataGridCell
+            if (e.OriginalSource.GetType() == typeof(DataGridCell))
+            {
+                // Starts the Edit on the row;
+                DataGrid grd = (DataGrid)sender;
+                grd.BeginEdit(e);
+            }
+        }
+
+        private void LogText(string text)
+        {
+            _Log.AppendText($"\n[{DateTime.Now.ToString("HH:mm tt")}] {text}");
         }
     }
 }
