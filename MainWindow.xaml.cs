@@ -29,7 +29,7 @@ namespace VinesauceVODClipper
         {
             InitializeComponent();
 
-            _Log.AppendText("Created by ShrineFox");
+            _Log.AppendText("Created by ShrineFox\nBackground image by AlizarinRed, Icon by Yoshitura");
             this.viewModel = new ViewModel();
             this.DataContext = this.viewModel;
             ffmpegPath = System.IO.Path.Combine(Exe.Directory(), "Dependencies//ffmpeg.exe");
