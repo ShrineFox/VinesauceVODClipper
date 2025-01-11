@@ -39,12 +39,29 @@ namespace VinesauceVODClipper
 
         private void OutputDirBrowseField_ButtonClicked(object sender, EventArgs e)
         {
-            MessageBox.Show("Output dir clicked!");
+            if (sender is BrowseField control)
+            {
+                var selectedDir = WinFormsDialogs.SelectFolder("Choose Clips Output Folder", Exe.Directory());
+                if (Directory.Exists(selectedDir))
+                {
+                    control.Text = selectedDir;
+                }
+            }
         }
 
         private void VideoGridBrowseField_ButtonClicked(object sender, EventArgs e)
         {
-            MessageBox.Show("Video Grid dir clicked!");
+            if (sender is BrowseField control)
+            {
+                var dgi = (DataGridItem)control.DataContext;
+
+                var selectedFiles = WinFormsDialogs.SelectFile("Pick matching raw VOD video file");
+                if (selectedFiles.Count > 0 && File.Exists(selectedFiles.First()))
+                {
+                    dgi.Path = selectedFiles.First();
+                    control.Text = dgi.Path;
+                }
+            }
         }
 
     }
