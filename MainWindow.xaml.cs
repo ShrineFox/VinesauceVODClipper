@@ -13,6 +13,8 @@ using System.IO;
 using VinesauceVODClipper.Controls;
 using System.Windows.Forms;
 using System.Collections.ObjectModel;
+using FFMpegCore;
+using FFMpegCore.Enums;
 
 namespace VinesauceVODClipper
 {
@@ -35,8 +37,14 @@ namespace VinesauceVODClipper
             this.DataContext = this.viewModel;
             ffmpegPath = System.IO.Path.Combine(Exe.Directory(), "Dependencies//ffmpeg.exe");
 
-            // Subscribe to the ButtonClicked event of the UserControl
             OutputDirBrowseField.ButtonClicked += OutputDirBrowseField_ButtonClicked;
+            // setting global options
+            GlobalFFOptions.Configure(new FFOptions { BinaryFolder = "./Dependencies", TemporaryFilesFolder = "/Logs", LogLevel = FFMpegLogLevel.Error });
+
+#if DEBUG
+            viewModel.DataGridItems.Add(new DataGridItem() { Title = "Monke", EndTime = TimeSpan.Parse("0:6:0"), Path = "C:\\Users\\Ryan\\Downloads\\Vinesauce： The Full Sauce - Vinny - Super Monkey Ball Banana Rumble (PART 7) Re-encode.mp4" });
+            OutputDirBrowseField.Text = "C:\\Users\\Ryan\\Downloads\\Clips";
+#endif
         }
 
         private void NewList_Click(object sender, EventArgs e)
@@ -181,7 +189,85 @@ namespace VinesauceVODClipper
             }
         }
 
-        
+        private void CreateClipsBtn_Click(object sender, EventArgs e)
+        {
+            CreateClips(viewModel.DataGridItems);
+        }
+
+        private void CreateClips(ObservableCollection<DataGridItem> items)
+        {
+            int successCount = 0;
+            int failureCount = 0;
+            for (int i = 0; i < items.Count; i++)
+            {
+                bool success = ValidateInput(items[i], i);
+                if (success)
+                {
+                    // Set Output Path
+                    string outputDir = OutputDirBrowseField.Text;
+                    if (string.IsNullOrEmpty(outputDir))
+                        outputDir = Exe.Directory();
+                    else if (!Directory.Exists(outputDir))
+                        Directory.CreateDirectory(outputDir);
+                    string outputFileName = $"{items[i].Title} - {items[i].Description}";
+                    string extension = System.IO.Path.GetExtension(items[i].Path);
+                    string outputPath = System.IO.Path.Combine(outputDir, outputFileName + extension);
+
+                    // Create Clip
+                    StringBuilder logBuilder = new StringBuilder();
+
+                    try
+                    {
+                        FFMpegArguments
+                        .FromFileInput(items[i].Path, true, options => options
+                            .Seek(items[i].StartTime)
+                            .WithCustomArgument($"-to {items[i].EndTime}"))
+                        .OutputToFile(outputPath, true, options => options
+                            .WithCustomArgument("-map 0 -c copy -avoid_negative_ts make_zero"))
+                        .NotifyOnOutput(line =>
+                        {
+                            logBuilder.AppendLine(line);
+                            LogText(line);
+                        })
+                        .ProcessSynchronously();
+
+                        LogText($"Created Clip {i + 1}/{items.Count}: \"{outputPath}\"");
+                        successCount++;
+                    }
+                    catch { failureCount++; }
+                }
+                else
+                    failureCount++;
+            }
+            System.Windows.MessageBox.Show($"Finished creating clips.\n\nSucceeded: {successCount}\nFailed: {failureCount}", "Finished Creating Clips");
+            LogText("Done creating clips.");
+        }
+
+        private bool ValidateInput(DataGridItem item, int index)
+        {
+            string outputFileName = $"{item.Title} - {item.Description}";
+            var timespanDifference = item.EndTime.Subtract(item.StartTime);
+            var clipLengthSeconds = timespanDifference.TotalSeconds;
+
+            if (!File.Exists(item.Path))
+            {
+                LogText($"Error! Input video not found for [Row {index}]: \"{item.Path}\" Skipping export of \"{outputFileName}\"...");
+                return false;
+            }
+
+            if (clipLengthSeconds < 5)
+            {
+                LogText($"Error! Timespan needs to be 5 seconds or longer for [Row {index}]: Currently \"{clipLengthSeconds}\" seconds. Skipping export of \"{outputFileName}\"...");
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidateItem(object item)
+        {
+            throw new NotImplementedException();
+        }
 
         private void LogText(string text)
         {
@@ -218,19 +304,51 @@ namespace VinesauceVODClipper
             contextMenu.IsOpen = true;
         }
 
+        private void DataGridContextMenu_MoveUp(object sender, EventArgs e)
+        {
+            var indexAbove = selectedRowIDs[0] - 1;
+            if (indexAbove <= -1) return;
+            var itemAbove = viewModel.DataGridItems[indexAbove];
+            viewModel.DataGridItems.RemoveAt(indexAbove);
+            var indexLastItem = selectedRowIDs[selectedRowIDs.Count - 1];
+            if (indexLastItem == viewModel.DataGridItems.Count)
+            {
+                viewModel.DataGridItems.Add(itemAbove);
+            }
+            else
+            {
+                try
+                {
+                    viewModel.DataGridItems.Insert(indexLastItem, itemAbove);
+                }
+                catch { }
+            }
+        }
+
+        private void DataGridContextMenu_MoveDown(object sender, EventArgs e)
+        {
+            var indexBelow = selectedRowIDs[selectedRowIDs.Count - 1] + 1;
+            if (indexBelow >= viewModel.DataGridItems.Count) return;
+            var itemBelow = viewModel.DataGridItems[indexBelow];
+            viewModel.DataGridItems.RemoveAt(indexBelow);
+            var indexAbove = selectedRowIDs[0] - 1;
+            viewModel.DataGridItems.Insert(indexAbove + 1, itemBelow);
+        }
+
         private void DataGridContextMenu_Add(object sender, EventArgs e)
         {
-            viewModel.DataGridItems.Add(new DataGridItem());
+            viewModel.DataGridItems.Insert(selectedRowIDs.Order().ToList().First(), new DataGridItem());
         }
+
         private void DataGridContextMenu_Duplicate(object sender, EventArgs e)
         {
             if (selectedRowIDs.Any(x => x.Equals(selectedCellRow)))
             {
                 foreach (var index in selectedRowIDs)
-                    viewModel.DataGridItems.Add(viewModel.DataGridItems[index].Copy());
+                    viewModel.DataGridItems.Insert(selectedRowIDs.Order().ToList().First(), viewModel.DataGridItems[index].Copy());
             }
             else
-                viewModel.DataGridItems.Add(viewModel.DataGridItems[selectedCellRow].Copy());
+                viewModel.DataGridItems.Insert(selectedCellRow, viewModel.DataGridItems[selectedCellRow].Copy());
         }
         private void DataGridContextMenu_Delete(object sender, EventArgs e)
         {

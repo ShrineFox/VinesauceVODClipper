@@ -84,6 +84,8 @@
                                     <control:BrowseField Text="{Binding Path}" ButtonClicked="VideoGridBrowseField_ButtonClicked"/>
                                 </DataTemplate>
                                 <ContextMenu x:Key="dataGridContextMenu" StaysOpen="true">
+                                    <MenuItem Header="Move Up" Click="DataGridContextMenu_MoveUp"/>
+                                    <MenuItem Header="Move Down" Click="DataGridContextMenu_MoveDown"/>
                                     <MenuItem Header="Add" Click="DataGridContextMenu_Add"/>
                                     <MenuItem Header="Duplicate" Click="DataGridContextMenu_Duplicate"/>
                                     <MenuItem Header="Delete" Click="DataGridContextMenu_Delete"/>
@@ -109,7 +111,7 @@
                     <GroupBox Header="_Log" Grid.Column="0" Margin="5,0,0,5">
                         <RichTextBox Name="_Log" MinHeight="50" Foreground="White" Background="Transparent" BorderBrush="Transparent" VerticalScrollBarVisibility="Visible" IsReadOnly="True"  />
                     </GroupBox>
-                    <Button Name="CreateClipsBtn" Grid.Column="1" BorderBrush="White">
+                    <Button Name="CreateClipsBtn" Grid.Column="1" BorderBrush="White" Click="CreateClipsBtn_Click">
                         Create Clips
                     </Button>
                 </Grid>

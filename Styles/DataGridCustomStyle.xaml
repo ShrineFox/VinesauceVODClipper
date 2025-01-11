@@ -59,17 +59,12 @@
                             <Setter Property="Background" Value="Transparent"/>
                         </DataTrigger>
 
-                        <DataTrigger Binding="{Binding IsEditing, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Value="False">
-                            <Setter Property="Foreground" Value="White"/>
-                            <Setter Property="Background" Value="Transparent"/>
-                        </DataTrigger>
-
                         <Trigger Property="IsEditing" Value="True">
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="DataGridCell">
                                         <TextBox Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Content.Text, Mode=TwoWay, UpdateSourceTrigger=Default}"
-												 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="0" BorderThickness="0" Background="#FF68BA6A"/>
+												 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="0" BorderThickness="0" Background="#8F68BA6A"/>
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
