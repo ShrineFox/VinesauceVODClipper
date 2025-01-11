@@ -51,33 +51,6 @@ namespace VinesauceVODClipper
             viewModel.DataGridItems = new ObservableCollection<DataGridItem>() { new DataGridItem() };
         }
 
-        private void OutputDirBrowseField_ButtonClicked(object sender, EventArgs e)
-        {
-            if (sender is BrowseField control)
-            {
-                var selectedDir = WinFormsDialogs.SelectFolder("Choose Clips Output Folder", Exe.Directory());
-                if (Directory.Exists(selectedDir))
-                {
-                    control.Text = selectedDir;
-                }
-            }
-        }
-
-        private void VideoGridBrowseField_ButtonClicked(object sender, EventArgs e)
-        {
-            if (sender is BrowseField control)
-            {
-                var dgi = (DataGridItem)control.DataContext;
-
-                var selectedFiles = WinFormsDialogs.SelectFile("Pick matching raw VOD video file");
-                if (selectedFiles.Count > 0 && File.Exists(selectedFiles.First()))
-                {
-                    dgi.Path = selectedFiles.First();
-                    control.Text = dgi.Path;
-                }
-            }
-        }
-
         private void ImportList_Click(object sender, EventArgs e)
         {
             var selectedFiles = WinFormsDialogs.SelectFile("Import .tsv File", false, new string[] { "Tab-Separated Values File (.tsv)" });
@@ -143,7 +116,7 @@ namespace VinesauceVODClipper
                         $"\nTitle\tDescription\tPath\tStartTime\tEndTime");
             }
 
-            foreach(var item in videoList)
+            foreach (var item in videoList)
                 viewModel.DataGridItems.Add(item);
             LogText($"Imported {videoList.Count} rows from file: {txtPath}");
         }
@@ -157,6 +130,58 @@ namespace VinesauceVODClipper
             }
             return timeStamp;
         }
+
+        private void ExportList_Click(object sender, EventArgs e)
+        {
+            var selectedFiles = WinFormsDialogs.SelectFile("Import .tsv File", false, new string[] { "Tab-Separated Values File (.tsv)" }, true);
+            if (selectedFiles.Count > 0)
+            {
+                ExportTsvFile(selectedFiles.First());
+            }
+        }
+
+        private void ExportTsvFile(string tsvPath)
+        {
+            if (!tsvPath.ToLower().EndsWith(".tsv"))
+                tsvPath += ".tsv";
+
+            string tsvText = "";
+            foreach(var item in viewModel.DataGridItems)
+            {
+                tsvText += $"{item.Title}\t{item.Description}\t{item.Path}\t{item.StartTime}\t{item.EndTime}\n";
+            }
+            File.WriteAllText(tsvPath, tsvText);
+            LogText($"Saved new .tsv file to: \"{tsvPath}\"");
+        }
+
+        private void OutputDirBrowseField_ButtonClicked(object sender, EventArgs e)
+        {
+            if (sender is BrowseField control)
+            {
+                var selectedDir = WinFormsDialogs.SelectFolder("Choose Clips Output Folder", Exe.Directory());
+                if (Directory.Exists(selectedDir))
+                {
+                    control.Text = selectedDir;
+                }
+            }
+        }
+
+        private void VideoGridBrowseField_ButtonClicked(object sender, EventArgs e)
+        {
+            if (sender is BrowseField control)
+            {
+                var dgi = (DataGridItem)control.DataContext;
+
+                var selectedFiles = WinFormsDialogs.SelectFile("Pick matching raw VOD video file");
+                if (selectedFiles.Count > 0 && File.Exists(selectedFiles.First()))
+                {
+                    dgi.Path = selectedFiles.First();
+                    control.Text = dgi.Path;
+                }
+            }
+        }
+
+        
 
         private void LogText(string text)
         {

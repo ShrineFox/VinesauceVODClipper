@@ -38,7 +38,7 @@
                 <MenuItem Header="_File" Margin="5">
                     <MenuItem Header="_New Video List" Click="NewList_Click"/>
                     <MenuItem Header="_Import Video List" Click="ImportList_Click"/>
-                    <MenuItem Header="_Export Video List" />
+                    <MenuItem Header="_Export Video List" Click="ExportList_Click" />
                 </MenuItem>
                 <MenuItem Header="_Options" Margin="5">
                     <MenuItem>
