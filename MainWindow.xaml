@@ -74,13 +74,20 @@
                         <control:BrowseField x:Name="OutputDirBrowseField"/>
                     </GroupBox>
                     <GroupBox Header="_Videos To Generate Clips From" Grid.Row="1" Grid.ColumnSpan="2">
+                        <!--Main DataGrid-->
                         <DataGrid Name="_VideosDataGrid" HorizontalAlignment="Stretch" ScrollViewer.PanningMode="VerticalFirst"
                                   VerticalAlignment="Top" ItemsSource="{Binding DataGridItems}" AutoGenerateColumns="False" 
-                                  Background="Transparent" BorderBrush="Transparent" LoadingRow="DataGrid_LoadingRow">
+                                  Background="Transparent" BorderBrush="Transparent" MouseRightButtonUp="DataGrid_RightClick"
+                                  LoadingRow="DataGrid_LoadingRow">
                             <DataGrid.Resources>
                                 <DataTemplate x:Key="BrowseTemplate">
                                     <control:BrowseField Text="{Binding Path}" ButtonClicked="VideoGridBrowseField_ButtonClicked"/>
                                 </DataTemplate>
+                                <ContextMenu x:Key="dataGridContextMenu" StaysOpen="true">
+                                    <MenuItem Header="Add" Click="DataGridContextMenu_Add"/>
+                                    <MenuItem Header="Duplicate" Click="DataGridContextMenu_Duplicate"/>
+                                    <MenuItem Header="Delete" Click="DataGridContextMenu_Delete"/>
+                                </ContextMenu>
                             </DataGrid.Resources>
 
                             <DataGrid.Columns>

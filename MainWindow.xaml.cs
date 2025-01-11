@@ -13,7 +13,6 @@ using System.IO;
 using VinesauceVODClipper.Controls;
 using System.Windows.Forms;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace VinesauceVODClipper
 {
@@ -23,6 +22,8 @@ namespace VinesauceVODClipper
     public partial class MainWindow : System.Windows.Window
     {
         string ffmpegPath = "";
+        List<int> selectedRowIDs;
+        int selectedCellRow;
         private readonly ViewModel viewModel;
 
         public MainWindow()
@@ -160,6 +161,73 @@ namespace VinesauceVODClipper
         private void LogText(string text)
         {
             _Log.AppendText($"\n[{DateTime.Now.ToString("HH:mm tt")}] {text}");
+        }
+
+        private void DataGrid_RightClick(object sender, MouseButtonEventArgs e)
+        {
+            // Get row of selected cell
+            DataGridRow dataGridRow = null;
+            var visibleParent = VisualTreeHelper.GetParent(e.OriginalSource as FrameworkElement);
+            while (dataGridRow == null && visibleParent != null)
+            {
+                dataGridRow = visibleParent as DataGridRow;
+                visibleParent = VisualTreeHelper.GetParent(visibleParent);
+            }
+            if (dataGridRow == null) { return; }
+
+            selectedCellRow = dataGridRow.GetIndex();
+
+            // Get all selected row IDs
+            selectedRowIDs = new List<int>();
+            foreach (var item in _VideosDataGrid.SelectedItems)
+            {
+                int index = _VideosDataGrid.Items.IndexOf(item);
+                if (index != -1)
+                {
+                    selectedRowIDs.Add(index);
+                }
+            }
+
+            // Show context menu
+            ContextMenu contextMenu = (ContextMenu)_VideosDataGrid.Resources["dataGridContextMenu"];
+            contextMenu.IsOpen = true;
+        }
+
+        private void DataGridContextMenu_Add(object sender, EventArgs e)
+        {
+            viewModel.DataGridItems.Add(new DataGridItem());
+        }
+        private void DataGridContextMenu_Duplicate(object sender, EventArgs e)
+        {
+            if (selectedRowIDs.Any(x => x.Equals(selectedCellRow)))
+            {
+                foreach (var index in selectedRowIDs)
+                    viewModel.DataGridItems.Add(viewModel.DataGridItems[index].Copy());
+            }
+            else
+                viewModel.DataGridItems.Add(viewModel.DataGridItems[selectedCellRow].Copy());
+        }
+        private void DataGridContextMenu_Delete(object sender, EventArgs e)
+        {
+            // If selected cell's row ID is part of full row selection, apply selected option to all rows
+            if (selectedRowIDs.Any(x => x.Equals(selectedCellRow)))
+            {
+                selectedRowIDs = selectedRowIDs.Order().ToList();
+                selectedRowIDs.Reverse();
+                foreach (var index in selectedRowIDs)
+                {
+                    try
+                    {
+                        viewModel.DataGridItems.RemoveAt(index);
+                    }
+                    catch { }
+                }
+            }
+            else
+            {
+                // Otherwise, apply selection to only selected individual row
+                viewModel.DataGridItems.RemoveAt(selectedCellRow);
+            }
         }
 
         // Add row numbers to DataGrid
