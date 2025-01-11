@@ -32,7 +32,7 @@
             <!--Menustrip-->
             <Menu DockPanel.Dock="Top" Background="#FF68BA6A" Foreground="White">
                 <MenuItem Header="_File" Margin="5">
-                    <MenuItem Header="_Import Video List"  />
+                    <MenuItem Header="_Import Video List" Click="ImportList_Click"/>
                     <MenuItem Header="_Export Video List" />
                 </MenuItem>
                 <MenuItem Header="_Options" Margin="5">
