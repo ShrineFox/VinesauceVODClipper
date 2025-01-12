@@ -42,7 +42,7 @@ public class DataGridItem : INotifyPropertyChanged
             if (_path != value)
             {
                 _path = value;
-                OnPropertyChanged(nameof(Path));
+                OnPropertyChanged("Path");
             }
         }
     }

@@ -81,7 +81,10 @@
                                   LoadingRow="DataGrid_LoadingRow">
                             <DataGrid.Resources>
                                 <DataTemplate x:Key="BrowseTemplate">
-                                    <control:BrowseField ButtonClicked="VideoGridBrowseField_ButtonClicked" Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}" TextChanged="VideoGridBrowseField_TextChanged"/>
+                                    <control:BrowseField 
+                                        ButtonClicked="VideoGridBrowseField_ButtonClicked" 
+                                        Text="{Binding Path, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        TextChanged="VideoGridBrowseField_TextChanged"/>
                                 </DataTemplate>
                                 <ContextMenu x:Key="dataGridContextMenu" StaysOpen="true">
                                     <MenuItem Header="Move Up" Click="DataGridContextMenu_MoveUp"/>

@@ -10,8 +10,8 @@ namespace VinesauceVODClipper.Controls
         public event PropertyChangedEventHandler PropertyChanged;
 
         public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register(nameof(Text), typeof(string), typeof(BrowseField),
-                new PropertyMetadata(string.Empty, OnTextChanged));
+            DependencyProperty.Register("Text", typeof(string), typeof(BrowseField),
+                new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public string Text
         {
@@ -23,17 +23,6 @@ namespace VinesauceVODClipper.Controls
         {
             InitializeComponent();
             _BrowseTxtBox.TextChanged += TextBox_TextChanged_Internal;
-        }
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var control = d as BrowseField;
-            control?.OnPropertyChanged(nameof(Text));
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
