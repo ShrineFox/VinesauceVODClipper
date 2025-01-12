@@ -74,35 +74,46 @@
                         <control:BrowseField x:Name="OutputDirBrowseField"/>
                     </GroupBox>
                     <GroupBox Header="_Videos To Generate Clips From" Grid.Row="1" Grid.ColumnSpan="2">
-                        <!--Main DataGrid-->
-                        <DataGrid Name="_VideosDataGrid" HorizontalAlignment="Stretch" ScrollViewer.PanningMode="VerticalFirst"
-                                  VerticalAlignment="Top" ItemsSource="{Binding DataGridItems}" AutoGenerateColumns="False" 
-                                  Background="Transparent" BorderBrush="Transparent" MouseRightButtonUp="DataGrid_RightClick"
-                                  LoadingRow="DataGrid_LoadingRow">
-                            <DataGrid.Resources>
-                                <DataTemplate x:Key="BrowseTemplate">
-                                    <control:BrowseField 
+                        <DockPanel>
+                            <!--Main DataGrid-->
+                            <DataGrid Name="_VideosDataGrid" DockPanel.Dock="Top" 
+                                    HorizontalAlignment="Stretch" ScrollViewer.PanningMode="VerticalFirst"
+                                    VerticalAlignment="Top" ItemsSource="{Binding DataGridItems}" 
+                                    CanUserAddRows="False" AutoGenerateColumns="False" 
+                                    Background="Transparent" BorderBrush="Transparent" MouseRightButtonUp="DataGrid_RightClick"
+                                    LoadingRow="DataGrid_LoadingRow" AllowDrop="True" Drop="DataGrid_Drop">
+                                <DataGrid.Resources>
+                                    <DataTemplate x:Key="BrowseTemplate">
+                                        <control:BrowseField 
                                         ButtonClicked="VideoGridBrowseField_ButtonClicked" 
                                         Text="{Binding Path, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                        TextChanged="VideoGridBrowseField_TextChanged"/>
-                                </DataTemplate>
-                                <ContextMenu x:Key="dataGridContextMenu" StaysOpen="true">
-                                    <MenuItem Header="Move Up" Click="DataGridContextMenu_MoveUp"/>
-                                    <MenuItem Header="Move Down" Click="DataGridContextMenu_MoveDown"/>
-                                    <MenuItem Header="Add" Click="DataGridContextMenu_Add"/>
-                                    <MenuItem Header="Duplicate" Click="DataGridContextMenu_Duplicate"/>
-                                    <MenuItem Header="Delete" Click="DataGridContextMenu_Delete"/>
-                                </ContextMenu>
-                            </DataGrid.Resources>
+                                        TextChanged="VideoGridBrowseField_TextChanged" AllowDrop="True" />
+                                    </DataTemplate>
+                                    <ContextMenu x:Key="dataGridContextMenu" StaysOpen="true">
+                                        <MenuItem Header="Move Up" Click="DataGridContextMenu_MoveUp"/>
+                                        <MenuItem Header="Move Down" Click="DataGridContextMenu_MoveDown"/>
+                                        <MenuItem Header="Add" Click="DataGridContextMenu_Add"/>
+                                        <MenuItem Header="Duplicate" Click="DataGridContextMenu_Duplicate"/>
+                                        <MenuItem Header="Delete" Click="DataGridContextMenu_Delete"/>
+                                    </ContextMenu>
+                                </DataGrid.Resources>
 
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="4*"/>
-                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*"/>
-                                <DataGridTemplateColumn Header="Path" Width="2*" CellTemplate="{StaticResource BrowseTemplate}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Start Time" Binding="{Binding StartTime}" MinWidth="80"/>
-                                <DataGridTextColumn Header="End Time" Binding="{Binding EndTime}" MinWidth="80"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="4*"/>
+                                    <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*"/>
+                                    <DataGridTemplateColumn Header="Path" Width="2*" CellTemplate="{StaticResource BrowseTemplate}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Start Time" Binding="{Binding StartTime}" MinWidth="80"/>
+                                    <DataGridTextColumn Header="End Time" Binding="{Binding EndTime}" MinWidth="80"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <StackPanel Name ="_VideosStackPanel" MouseRightButtonUp="StackPanel_RightClick" DockPanel.Dock="Bottom" Background="#00C52C2C">
+                                <StackPanel.Resources>
+                                    <ContextMenu x:Key="stackPanelContextMenu" StaysOpen="true">
+                                        <MenuItem Header="Add" Click="StackPanelContextMenu_Add"/>
+                                    </ContextMenu>
+                                </StackPanel.Resources>
+                            </StackPanel>
+                        </DockPanel>
                     </GroupBox>
                 </Grid>
                 <GridSplitter Grid.Row="1" Height="5" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ResizeDirection="Rows" Background="Transparent" />

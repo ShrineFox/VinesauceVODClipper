@@ -41,6 +41,13 @@ namespace VinesauceVODClipper
             OutputDirBrowseField.ButtonClicked += OutputDirBrowseField_ButtonClicked;
             // setting global options
             GlobalFFOptions.Configure(new FFOptions { BinaryFolder = "./Dependencies", TemporaryFilesFolder = "/Logs", LogLevel = FFMpegLogLevel.Error });
+
+#if DEBUG
+            this.viewModel = new ViewModel() { DataGridItems = { new DataGridItem() { Title = "Title 1" },
+                new DataGridItem() { Title = "Title 2" }, new DataGridItem() { Title = "Title 3" },
+                new DataGridItem() { Title = "Title 4" }, new DataGridItem() { Title = "Title 5" },} };
+            this.DataContext = this.viewModel;
+#endif
         }
 
         private void NewList_Click(object sender, EventArgs e)
@@ -307,6 +314,13 @@ namespace VinesauceVODClipper
             contextMenu.IsOpen = true;
         }
 
+        private void StackPanel_RightClick(object sender, MouseButtonEventArgs e)
+        {
+            // Show context menu
+            ContextMenu contextMenu = (ContextMenu)_VideosStackPanel.Resources["stackPanelContextMenu"];
+            contextMenu.IsOpen = true;
+        }
+
         private int GetCurrentCellRow(FrameworkElement originalSource)
         {
             // Get row of selected cell
@@ -358,6 +372,11 @@ namespace VinesauceVODClipper
             viewModel.DataGridItems.Insert(selectedRowIDs.Order().ToList().First(), new DataGridItem());
         }
 
+        private void StackPanelContextMenu_Add(object sender, EventArgs e)
+        {
+            viewModel.DataGridItems.Add(new DataGridItem());
+        }
+
         private void DataGridContextMenu_Duplicate(object sender, EventArgs e)
         {
             if (selectedRowIDs.Any(x => x.Equals(selectedCellRow)))
@@ -395,6 +414,41 @@ namespace VinesauceVODClipper
         void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = (e.Row.GetIndex()).ToString();
+        }
+
+        private void DataGrid_Drop(object sender, System.Windows.DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop))
+            {
+                var files = (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
+                if (files.Length > 0)
+                {
+                    var droppedFilePath = files[0];
+                    var position = e.GetPosition(_VideosDataGrid);
+                    var hitTestResult = VisualTreeHelper.HitTest(_VideosDataGrid, position);
+                    if (hitTestResult != null)
+                    {
+                        var dataGridRow = FindAncestor<DataGridRow>(hitTestResult.VisualHit);
+                        if (dataGridRow != null)
+                        {
+                            var dataGridItem = dataGridRow.Item as DataGridItem;
+                            if (dataGridItem != null)
+                            {
+                                dataGridItem.Path = droppedFilePath;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static T FindAncestor<T>(DependencyObject current) where T : DependencyObject
+        {
+            while (current != null && !(current is T))
+            {
+                current = VisualTreeHelper.GetParent(current);
+            }
+            return current as T;
         }
     }
 }

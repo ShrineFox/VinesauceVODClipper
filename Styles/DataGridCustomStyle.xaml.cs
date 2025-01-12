@@ -27,6 +27,8 @@ namespace VinesauceVODClipper
             {
                 // Starts the Edit on the row;
                 DataGrid grd = (DataGrid)sender;
+                if (grd == null)
+                    return;
                 grd.BeginEdit(e);
 
                 System.Windows.Controls.Control control = GetFirstChildByType<System.Windows.Controls.Control>(e.OriginalSource as DataGridCell);
