@@ -1,30 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.Win32;
 
 namespace VinesauceVODClipper.Controls
 {
-    /// <summary>
-    /// Interaction logic for BrowseField.xaml
-    /// </summary>
-    public partial class BrowseField : UserControl
+    public partial class BrowseField : UserControl, INotifyPropertyChanged
     {
-        // Dependency Property for Text
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(BrowseField),
-                new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+            DependencyProperty.Register(nameof(Text), typeof(string), typeof(BrowseField),
+                new PropertyMetadata(string.Empty, OnTextChanged));
 
         public string Text
         {
@@ -35,17 +22,36 @@ namespace VinesauceVODClipper.Controls
         public BrowseField()
         {
             InitializeComponent();
-            // Bind the internal TextBox.Text to the custom Text property
-            _BrowseTxtBox.SetBinding(TextBox.TextProperty, new Binding("Text") { Source = this, Mode = BindingMode.TwoWay });
+            _BrowseTxtBox.TextChanged += TextBox_TextChanged_Internal;
         }
 
-        // Define a public event that other forms can subscribe to
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = d as BrowseField;
+            control?.OnPropertyChanged(nameof(Text));
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Text = (sender as TextBox)?.Text;
+        }
+
         public event EventHandler ButtonClicked;
 
-        // Raise the ButtonClicked event when the button is clicked
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             ButtonClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        public event TextChangedEventHandler TextChanged;
+        private void TextBox_TextChanged_Internal(object sender, TextChangedEventArgs e)
+        {
+            TextChanged?.Invoke(this, e);
         }
     }
 }

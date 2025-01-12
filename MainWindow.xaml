@@ -27,7 +27,7 @@
             <GradientStop Color="#FF2C3592" Offset="1"/>
         </LinearGradientBrush>
     </Window.Background>
-    
+
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="/Dependencies/VineShroomBg.png" Stretch="UniformToFill" Opacity="0.25"/>
@@ -81,7 +81,7 @@
                                   LoadingRow="DataGrid_LoadingRow">
                             <DataGrid.Resources>
                                 <DataTemplate x:Key="BrowseTemplate">
-                                    <control:BrowseField Text="{Binding Path}" ButtonClicked="VideoGridBrowseField_ButtonClicked"/>
+                                    <control:BrowseField ButtonClicked="VideoGridBrowseField_ButtonClicked" Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}" TextChanged="VideoGridBrowseField_TextChanged"/>
                                 </DataTemplate>
                                 <ContextMenu x:Key="dataGridContextMenu" StaysOpen="true">
                                     <MenuItem Header="Move Up" Click="DataGridContextMenu_MoveUp"/>

@@ -40,11 +40,6 @@ namespace VinesauceVODClipper
             OutputDirBrowseField.ButtonClicked += OutputDirBrowseField_ButtonClicked;
             // setting global options
             GlobalFFOptions.Configure(new FFOptions { BinaryFolder = "./Dependencies", TemporaryFilesFolder = "/Logs", LogLevel = FFMpegLogLevel.Error });
-
-#if DEBUG
-            viewModel.DataGridItems.Add(new DataGridItem() { Title = "Monke", EndTime = TimeSpan.Parse("0:6:0"), Path = "C:\\Users\\Ryan\\Downloads\\Vinesauce： The Full Sauce - Vinny - Super Monkey Ball Banana Rumble (PART 7) Re-encode.mp4" });
-            OutputDirBrowseField.Text = "C:\\Users\\Ryan\\Downloads\\Clips";
-#endif
         }
 
         private void NewList_Click(object sender, EventArgs e)
@@ -162,6 +157,25 @@ namespace VinesauceVODClipper
             LogText($"Saved new .tsv file to: \"{tsvPath}\"");
         }
 
+        private void VideoGridBrowseField_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            /* Causes infinite recursion StackOverflow exception
+            if (sender is BrowseField control)
+            {
+                var dataGridRow = _VideosDataGrid.Items.IndexOf(_VideosDataGrid.CurrentItem);
+                if (dataGridRow == -1)
+                    return;
+
+                string title = viewModel.DataGridItems[dataGridRow].Title;
+
+                foreach (var item in viewModel.DataGridItems.Where(x => x.Title == title && x.Path != control.Text))
+                {
+                    item.Path = control.Text;
+                }
+            }
+            */
+        }
+
         private void OutputDirBrowseField_ButtonClicked(object sender, EventArgs e)
         {
             if (sender is BrowseField control)
@@ -182,23 +196,6 @@ namespace VinesauceVODClipper
                 if (selectedFiles.Count > 0 && File.Exists(selectedFiles.First()))
                 {
                     control.Text = selectedFiles.First();
-                }
-            }
-        }
-
-        private void VideoGridBrowseField_TextChanged(object sender, EventArgs e)
-        {
-            if (sender is BrowseField control)
-            {
-                var dataGridRow = _VideosDataGrid.Items.IndexOf(_VideosDataGrid.CurrentItem);
-                if (dataGridRow == -1)
-                    return;
-
-                string title = viewModel.DataGridItems[dataGridRow].Title;
-
-                foreach (var item in viewModel.DataGridItems.Where(x => x.Title == title))
-                {
-                    item.Path = control.Text;
                 }
             }
         }
