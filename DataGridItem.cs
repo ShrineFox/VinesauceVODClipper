@@ -2,20 +2,20 @@
 
 public class DataGridItem : INotifyPropertyChanged
 {
-    private string _title;
-    private string _description;
-    private string _path;
-    private TimeSpan _startTime;
-    private TimeSpan _endTime;
+    private string title;
+    private string description;
+    private string path;
+    private TimeSpan startTime;
+    private TimeSpan endTime;
 
     public string Title
     {
-        get => _title;
+        get => title;
         set
         {
-            if (_title != value)
+            if (title != value)
             {
-                _title = value;
+                title = value;
                 OnPropertyChanged(nameof(Title));
             }
         }
@@ -23,12 +23,12 @@ public class DataGridItem : INotifyPropertyChanged
 
     public string Description
     {
-        get => _description;
+        get => description;
         set
         {
-            if (_description != value)
+            if (description != value)
             {
-                _description = value;
+                description = value;
                 OnPropertyChanged(nameof(Description));
             }
         }
@@ -36,25 +36,25 @@ public class DataGridItem : INotifyPropertyChanged
 
     public string Path
     {
-        get => _path;
+        get => path;
         set
         {
-            if (_path != value)
+            if (path != value)
             {
-                _path = value;
-                OnPropertyChanged("Path");
+                path = value;
+                OnPropertyChanged(nameof(Path));
             }
         }
     }
 
     public TimeSpan StartTime
     {
-        get => _startTime;
+        get => startTime;
         set
         {
-            if (_startTime != value)
+            if (startTime != value)
             {
-                _startTime = value;
+                startTime = value;
                 OnPropertyChanged(nameof(StartTime));
             }
         }
@@ -62,12 +62,12 @@ public class DataGridItem : INotifyPropertyChanged
 
     public TimeSpan EndTime
     {
-        get => _endTime;
+        get => endTime;
         set
         {
-            if (_endTime != value)
+            if (endTime != value)
             {
-                _endTime = value;
+                endTime = value;
                 OnPropertyChanged(nameof(EndTime));
             }
         }

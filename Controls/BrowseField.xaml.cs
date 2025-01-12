@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace VinesauceVODClipper.Controls
 {
@@ -22,13 +23,11 @@ namespace VinesauceVODClipper.Controls
         public BrowseField()
         {
             InitializeComponent();
-            _BrowseTxtBox.TextChanged += TextBox_TextChanged_Internal;
+            // Bind the internal TextBox.Text to the custom Text property
+            _BrowseTxtBox.SetBinding(TextBox.TextProperty, new Binding("Text") { Source = this, Mode = BindingMode.TwoWay });
+            _BrowseTxtBox.TextChanged += TextBox_TextChanged;
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            Text = (sender as TextBox)?.Text;
-        }
 
         public event EventHandler ButtonClicked;
 
@@ -38,8 +37,13 @@ namespace VinesauceVODClipper.Controls
         }
 
         public event TextChangedEventHandler TextChanged;
-        private void TextBox_TextChanged_Internal(object sender, TextChangedEventArgs e)
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            // Update the source binding explicitly
+            var bindingExpression = _BrowseTxtBox.GetBindingExpression(TextBox.TextProperty);
+            bindingExpression?.UpdateSource();
+
             TextChanged?.Invoke(this, e);
         }
     }

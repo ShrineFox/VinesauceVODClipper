@@ -1,27 +1,26 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-internal class ViewModel : INotifyPropertyChanged
+namespace VinesauceVODClipper
 {
-    private ObservableCollection<DataGridItem> _dataGridItems = new ObservableCollection<DataGridItem>();
-
-    public ObservableCollection<DataGridItem> DataGridItems
+    internal class ViewModel : INotifyPropertyChanged
     {
-        get => _dataGridItems;
-        set
+        private ObservableCollection<DataGridItem> _dataGridItems = new ObservableCollection<DataGridItem>();
+        public ObservableCollection<DataGridItem> DataGridItems
         {
-            if (_dataGridItems != value)
+            get => _dataGridItems;
+            set
             {
                 _dataGridItems = value;
                 OnPropertyChanged(nameof(DataGridItems));
             }
         }
-    }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

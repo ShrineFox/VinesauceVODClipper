@@ -27,6 +27,7 @@ namespace VinesauceVODClipper
         List<int> selectedRowIDs;
         int selectedCellRow;
         private readonly ViewModel viewModel;
+        private bool updateTextFields = true;
 
         public MainWindow()
         {
@@ -159,21 +160,21 @@ namespace VinesauceVODClipper
 
         private void VideoGridBrowseField_TextChanged(object sender, TextChangedEventArgs e)
         {
-            /* Causes infinite recursion StackOverflow exception
-            if (sender is BrowseField control)
+            if (updateTextFields && sender is BrowseField control)
             {
                 var dataGridRow = _VideosDataGrid.Items.IndexOf(_VideosDataGrid.CurrentItem);
-                if (dataGridRow == -1)
+                if (dataGridRow == -1 || viewModel.DataGridItems.Count == 0)
                     return;
 
                 string title = viewModel.DataGridItems[dataGridRow].Title;
 
+                updateTextFields = false;
                 foreach (var item in viewModel.DataGridItems.Where(x => x.Title == title && x.Path != control.Text))
                 {
                     item.Path = control.Text;
                 }
+                updateTextFields = true;
             }
-            */
         }
 
         private void OutputDirBrowseField_ButtonClicked(object sender, EventArgs e)

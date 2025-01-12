@@ -11,7 +11,8 @@
             <ColumnDefinition Width="60" />
         </Grid.ColumnDefinitions>
         <TextBox Name="_BrowseTxtBox" Grid.Column="0" Height="20" MinHeight="20" 
-                 Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                 Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
+                    RelativeSource={RelativeSource AncestorType=UserControl}}"
                  TextChanged="TextBox_TextChanged"/>
         <Button Name="_BrowseBtn" Grid.Column="1" Height="20" MinHeight="20" Margin="2,0,0,0" Click="Button_Click">
             ...
