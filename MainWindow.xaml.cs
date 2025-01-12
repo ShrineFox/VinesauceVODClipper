@@ -23,7 +23,7 @@ namespace VinesauceVODClipper
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-        string ffmpegPath = "";
+        string ffmpegPath = System.IO.Path.Combine(Exe.Directory(), "./Dependencies/ffmpeg.exe");
         List<int> selectedRowIDs;
         int selectedCellRow;
         private readonly ViewModel viewModel;
@@ -178,19 +178,39 @@ namespace VinesauceVODClipper
         {
             if (sender is BrowseField control)
             {
-                var dgi = (DataGridItem)control.DataContext;
-
                 var selectedFiles = WinFormsDialogs.SelectFile("Pick matching raw VOD video file");
                 if (selectedFiles.Count > 0 && File.Exists(selectedFiles.First()))
                 {
-                    dgi.Path = selectedFiles.First();
-                    control.Text = dgi.Path;
+                    control.Text = selectedFiles.First();
+                }
+            }
+        }
+
+        private void VideoGridBrowseField_TextChanged(object sender, EventArgs e)
+        {
+            if (sender is BrowseField control)
+            {
+                var dataGridRow = _VideosDataGrid.Items.IndexOf(_VideosDataGrid.CurrentItem);
+                if (dataGridRow == -1)
+                    return;
+
+                string title = viewModel.DataGridItems[dataGridRow].Title;
+
+                foreach (var item in viewModel.DataGridItems.Where(x => x.Title == title))
+                {
+                    item.Path = control.Text;
                 }
             }
         }
 
         private void CreateClipsBtn_Click(object sender, EventArgs e)
         {
+            if (!File.Exists(ffmpegPath))
+            {
+                LogText($"Failed to process videos, ffmpeg.exe was not found at: \"{ffmpegPath}\"");
+                return;
+            }
+
             CreateClips(viewModel.DataGridItems);
         }
 
@@ -223,7 +243,7 @@ namespace VinesauceVODClipper
                             .Seek(items[i].StartTime)
                             .WithCustomArgument($"-to {items[i].EndTime}"))
                         .OutputToFile(outputPath, true, options => options
-                            .WithCustomArgument("-map 0 -c copy -avoid_negative_ts make_zero"))
+                            .WithCustomArgument($"-map 0 -c copy -avoid_negative_ts {_TimeStampModeComboBox.SelectedItem.ToString()}"))
                         .NotifyOnOutput(line =>
                         {
                             logBuilder.AppendLine(line);
@@ -255,18 +275,13 @@ namespace VinesauceVODClipper
                 return false;
             }
 
-            if (clipLengthSeconds < 5)
+            if (clipLengthSeconds <= 5)
             {
                 LogText($"Error! Timespan needs to be 5 seconds or longer for [Row {index}]: Currently \"{clipLengthSeconds}\" seconds. Skipping export of \"{outputFileName}\"...");
                 return false;
             }
 
             return true;
-        }
-
-        private bool ValidateItem(object item)
-        {
-            throw new NotImplementedException();
         }
 
         private void LogText(string text)
@@ -276,17 +291,7 @@ namespace VinesauceVODClipper
 
         private void DataGrid_RightClick(object sender, MouseButtonEventArgs e)
         {
-            // Get row of selected cell
-            DataGridRow dataGridRow = null;
-            var visibleParent = VisualTreeHelper.GetParent(e.OriginalSource as FrameworkElement);
-            while (dataGridRow == null && visibleParent != null)
-            {
-                dataGridRow = visibleParent as DataGridRow;
-                visibleParent = VisualTreeHelper.GetParent(visibleParent);
-            }
-            if (dataGridRow == null) { return; }
-
-            selectedCellRow = dataGridRow.GetIndex();
+            selectedCellRow = GetCurrentCellRow(e.OriginalSource as FrameworkElement);
 
             // Get all selected row IDs
             selectedRowIDs = new List<int>();
@@ -302,6 +307,21 @@ namespace VinesauceVODClipper
             // Show context menu
             ContextMenu contextMenu = (ContextMenu)_VideosDataGrid.Resources["dataGridContextMenu"];
             contextMenu.IsOpen = true;
+        }
+
+        private int GetCurrentCellRow(FrameworkElement originalSource)
+        {
+            // Get row of selected cell
+            DataGridRow dataGridRow = null;
+            var visibleParent = VisualTreeHelper.GetParent(originalSource);
+            while (dataGridRow == null && visibleParent != null)
+            {
+                dataGridRow = visibleParent as DataGridRow;
+                visibleParent = VisualTreeHelper.GetParent(visibleParent);
+            }
+            if (dataGridRow == null) { return -1; }
+
+            return dataGridRow.GetIndex();
         }
 
         private void DataGridContextMenu_MoveUp(object sender, EventArgs e)
