@@ -298,6 +298,15 @@ namespace VinesauceVODClipper
         {
             selectedCellRow = GetCurrentCellRow(e.OriginalSource as FrameworkElement);
 
+            GetSelectedRowIDs();
+
+            // Show context menu
+            ContextMenu contextMenu = (ContextMenu)_VideosDataGrid.Resources["dataGridContextMenu"];
+            contextMenu.IsOpen = true;
+        }
+
+        private void GetSelectedRowIDs()
+        {
             // Get all selected row IDs
             selectedRowIDs = new List<int>();
             foreach (var item in _VideosDataGrid.SelectedItems)
@@ -309,9 +318,9 @@ namespace VinesauceVODClipper
                 }
             }
 
-            // Show context menu
-            ContextMenu contextMenu = (ContextMenu)_VideosDataGrid.Resources["dataGridContextMenu"];
-            contextMenu.IsOpen = true;
+            // Get them in order and reverse the list
+            selectedRowIDs = selectedRowIDs.Order().ToList();
+            selectedRowIDs.Reverse();
         }
 
         private void StackPanel_RightClick(object sender, MouseButtonEventArgs e)
@@ -338,6 +347,11 @@ namespace VinesauceVODClipper
 
         private void DataGridContextMenu_MoveUp(object sender, EventArgs e)
         {
+            MoveSelectedRowsUp();
+        }
+
+        private void MoveSelectedRowsUp()
+        {
             var indexAbove = selectedRowIDs[0] - 1;
             if (indexAbove <= -1) return;
             var itemAbove = viewModel.DataGridItems[indexAbove];
@@ -359,6 +373,11 @@ namespace VinesauceVODClipper
 
         private void DataGridContextMenu_MoveDown(object sender, EventArgs e)
         {
+            MoveSelectedRowsDown();
+        }
+
+        private void MoveSelectedRowsDown()
+        {
             var indexBelow = selectedRowIDs[selectedRowIDs.Count - 1] + 1;
             if (indexBelow >= viewModel.DataGridItems.Count) return;
             var itemBelow = viewModel.DataGridItems[indexBelow];
@@ -369,7 +388,7 @@ namespace VinesauceVODClipper
 
         private void DataGridContextMenu_Add(object sender, EventArgs e)
         {
-            viewModel.DataGridItems.Insert(selectedRowIDs.Order().ToList().First(), new DataGridItem());
+            viewModel.DataGridItems.Insert(selectedRowIDs.First(), new DataGridItem());
         }
 
         private void StackPanelContextMenu_Add(object sender, EventArgs e)
@@ -392,8 +411,6 @@ namespace VinesauceVODClipper
             // If selected cell's row ID is part of full row selection, apply selected option to all rows
             if (selectedRowIDs.Any(x => x.Equals(selectedCellRow)))
             {
-                selectedRowIDs = selectedRowIDs.Order().ToList();
-                selectedRowIDs.Reverse();
                 foreach (var index in selectedRowIDs)
                 {
                     try
@@ -449,6 +466,84 @@ namespace VinesauceVODClipper
                 current = VisualTreeHelper.GetParent(current);
             }
             return current as T;
+        }
+
+        private void MoveFocusToCellAbove()
+        {
+            var currentCell = _VideosDataGrid.CurrentCell;
+            var currentRowIndex = _VideosDataGrid.Items.IndexOf(currentCell.Item);
+            if (currentRowIndex > 0)
+            {
+                var previousRow = _VideosDataGrid.ItemContainerGenerator.ContainerFromIndex(currentRowIndex - 1) as DataGridRow;
+                if (previousRow != null)
+                {
+                    var cellContent = _VideosDataGrid.Columns[currentCell.Column.DisplayIndex].GetCellContent(previousRow);
+                    if (cellContent != null)
+                    {
+                        var cell = cellContent.Parent as DataGridCell;
+                        if (cell != null)
+                        {
+                            cell.Focus();
+                            _VideosDataGrid.CurrentCell = new DataGridCellInfo(cell);
+                            _VideosDataGrid.SelectedItem = previousRow.Item;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void MoveFocusToCellBelow()
+        {
+            var currentCell = _VideosDataGrid.CurrentCell;
+            var currentRowIndex = _VideosDataGrid.Items.IndexOf(currentCell.Item);
+            if (currentRowIndex < _VideosDataGrid.Items.Count - 1)
+            {
+                var nextRow = _VideosDataGrid.ItemContainerGenerator.ContainerFromIndex(currentRowIndex + 1) as DataGridRow;
+                if (nextRow != null)
+                {
+                    var cellContent = _VideosDataGrid.Columns[currentCell.Column.DisplayIndex].GetCellContent(nextRow);
+                    if (cellContent != null)
+                    {
+                        var cell = cellContent.Parent as DataGridCell;
+                        if (cell != null)
+                        {
+                            cell.Focus();
+                            _VideosDataGrid.CurrentCell = new DataGridCellInfo(cell);
+                            _VideosDataGrid.SelectedItem = nextRow.Item;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void DataGrid_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+            {
+                GetSelectedRowIDs();
+                foreach (var rowID in selectedRowIDs)
+                {
+                    viewModel.DataGridItems.RemoveAt(rowID);
+                }
+            }
+            else if (e.Key == Key.Up && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                GetSelectedRowIDs();
+                MoveSelectedRowsUp();
+            }
+            else if (e.Key == Key.Down && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                GetSelectedRowIDs();
+                MoveSelectedRowsDown();
+            }
+            else if (e.Key == Key.Up)
+            {
+                MoveFocusToCellAbove();
+            }
+            else if (e.Key == Key.Down)
+            {
+                MoveFocusToCellBelow();
+            }
         }
     }
 }

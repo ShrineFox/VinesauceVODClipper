@@ -76,7 +76,7 @@
                     <GroupBox Header="_Videos To Generate Clips From" Grid.Row="1" Grid.ColumnSpan="2">
                         <DockPanel>
                             <!--Main DataGrid-->
-                            <DataGrid Name="_VideosDataGrid" DockPanel.Dock="Top" 
+                            <DataGrid Name="_VideosDataGrid" DockPanel.Dock="Top" PreviewKeyDown="DataGrid_PreviewKeyDown"
                                     HorizontalAlignment="Stretch" ScrollViewer.PanningMode="VerticalFirst"
                                     VerticalAlignment="Top" ItemsSource="{Binding DataGridItems}" 
                                     CanUserAddRows="False" AutoGenerateColumns="False" 
