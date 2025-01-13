@@ -40,7 +40,8 @@ namespace VinesauceVODClipper
 
             OutputDirBrowseField.ButtonClicked += OutputDirBrowseField_ButtonClicked;
             // setting global options
-            GlobalFFOptions.Configure(new FFOptions { BinaryFolder = "./Dependencies", TemporaryFilesFolder = "/Logs", LogLevel = FFMpegLogLevel.Error });
+            Directory.CreateDirectory("./Logs");
+            GlobalFFOptions.Configure(new FFOptions { BinaryFolder = "./Dependencies", TemporaryFilesFolder = "./Logs", LogLevel = FFMpegLogLevel.Verbose });
 
 #if DEBUG
             this.viewModel = new ViewModel() { DataGridItems = { new DataGridItem() { Title = "Title 1" },
@@ -48,6 +49,20 @@ namespace VinesauceVODClipper
                 new DataGridItem() { Title = "Title 4" }, new DataGridItem() { Title = "Title 5" },} };
             this.DataContext = this.viewModel;
 #endif
+        }
+
+        private void LogDetailComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItem errorSetting = (ComboBoxItem)_LogDetailComboBox.SelectedItem;
+
+            if (errorSetting.Content == "Verbose")
+            {
+                GlobalFFOptions.Configure(new FFOptions { BinaryFolder = "./Dependencies", TemporaryFilesFolder = "/Logs", LogLevel = FFMpegLogLevel.Verbose });
+            }
+            else
+            {
+                GlobalFFOptions.Configure(new FFOptions { BinaryFolder = "./Dependencies", TemporaryFilesFolder = "/Logs", LogLevel = FFMpegLogLevel.Error });
+            }
         }
 
         private void NewList_Click(object sender, EventArgs e)
@@ -221,6 +236,8 @@ namespace VinesauceVODClipper
 
         private void CreateClips(ObservableCollection<DataGridItem> items)
         {
+            ComboBoxItem timeStampMode = (ComboBoxItem)_TimeStampModeComboBox.SelectedItem;
+
             int successCount = 0;
             int failureCount = 0;
             for (int i = 0; i < items.Count; i++)
@@ -231,7 +248,7 @@ namespace VinesauceVODClipper
                     // Set Output Path
                     string outputDir = OutputDirBrowseField.Text;
                     if (string.IsNullOrEmpty(outputDir))
-                        outputDir = Exe.Directory();
+                        outputDir = System.IO.Path.Combine(Exe.Directory(), "Output");
                     else if (!Directory.Exists(outputDir))
                         Directory.CreateDirectory(outputDir);
                     string outputFileName = $"{items[i].Title} - {items[i].Description}";
@@ -242,30 +259,43 @@ namespace VinesauceVODClipper
                     StringBuilder logBuilder = new StringBuilder();
 
                     try
-                    {
-                        FFMpegArguments
+                    {       
+                        var args = FFMpegArguments
                         .FromFileInput(items[i].Path, true, options => options
                             .Seek(items[i].StartTime)
                             .WithCustomArgument($"-to {items[i].EndTime}"))
                         .OutputToFile(outputPath, true, options => options
-                            .WithCustomArgument($"-map 0 -c copy -avoid_negative_ts {_TimeStampModeComboBox.SelectedItem.ToString()}"))
+                            .WithCustomArgument($"-map 0 -c copy -avoid_negative_ts {timeStampMode.Content}"))
                         .NotifyOnOutput(line =>
                         {
                             logBuilder.AppendLine(line);
                             LogText(line);
-                        })
-                        .ProcessSynchronously();
+                        });
 
-                        LogText($"Created Clip {i + 1}/{items.Count}: \"{outputPath}\"");
-                        successCount++;
+                        VerboseLogText($"Processing Clip {i + 1}/{items.Count} with arguments:\nffmpeg.exe {args.Arguments}");
+
+                        if (args.ProcessSynchronously())
+                        {
+                            LogText($"Created Clip {i + 1}/{items.Count}: \"{outputPath}\"");
+                            successCount++;
+                        }
+                        else
+                            failureCount++;
                     }
-                    catch { failureCount++; }
+                    catch (Exception e) { LogText($"[ERROR] An exception has occured: {e.Message}"); failureCount++; }
                 }
                 else
                     failureCount++;
             }
             System.Windows.MessageBox.Show($"Finished creating clips.\n\nSucceeded: {successCount}\nFailed: {failureCount}", "Finished Creating Clips");
             LogText("Done creating clips.");
+        }
+
+        private void VerboseLogText(string text)
+        {
+            ComboBoxItem errorSetting = (ComboBoxItem)_LogDetailComboBox.SelectedItem;
+            if (errorSetting.Content == "Verbose")
+                LogText(text);
         }
 
         private bool ValidateInput(DataGridItem item, int index)
@@ -292,6 +322,7 @@ namespace VinesauceVODClipper
         private void LogText(string text)
         {
             _Log.AppendText($"\n[{DateTime.Now.ToString("HH:mm tt")}] {text}");
+            _Log.ScrollToEnd();
         }
 
         private void DataGrid_RightClick(object sender, MouseButtonEventArgs e)

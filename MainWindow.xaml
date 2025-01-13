@@ -54,6 +54,17 @@
                             </StackPanel>
                         </MenuItem.Header>
                     </MenuItem>
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Log Detail: " VerticalAlignment="Center" Foreground="White" Background="#FF68BA6A"/>
+                                <ComboBox Name="_LogDetailComboBox" Width="150" SelectedIndex="0" SelectionChanged="LogDetailComboBox_SelectionChanged" >
+                                    <ComboBoxItem Content="Verbose" BorderThickness="0"/>
+                                    <ComboBoxItem Content="Error" BorderThickness="0"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
                 </MenuItem>
             </Menu>
 
