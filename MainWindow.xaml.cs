@@ -34,28 +34,19 @@ namespace VinesauceVODClipper
             InitializeComponent();
 
             _Log.AppendText("Created by ShrineFox\nBackground image by AlizarinRed, Icon by Yoshitura");
-            this.viewModel = new ViewModel();
+            this.viewModel = new ViewModel() { DataGridItems = { new DataGridItem() } };
             this.DataContext = this.viewModel;
             ffmpegPath = System.IO.Path.Combine(Exe.Directory(), "Dependencies//ffmpeg.exe");
 
             OutputDirBrowseField.ButtonClicked += OutputDirBrowseField_ButtonClicked;
-            // setting global options
-            Directory.CreateDirectory("./Logs");
-            GlobalFFOptions.Configure(new FFOptions { BinaryFolder = "./Dependencies", TemporaryFilesFolder = "./Logs", LogLevel = FFMpegLogLevel.Verbose });
-
-#if DEBUG
-            this.viewModel = new ViewModel() { DataGridItems = { new DataGridItem() { Title = "Title 1" },
-                new DataGridItem() { Title = "Title 2" }, new DataGridItem() { Title = "Title 3" },
-                new DataGridItem() { Title = "Title 4" }, new DataGridItem() { Title = "Title 5" },} };
-            this.DataContext = this.viewModel;
-#endif
         }
 
         private void LogDetailComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            Directory.CreateDirectory("./Logs");
             ComboBoxItem errorSetting = (ComboBoxItem)_LogDetailComboBox.SelectedItem;
 
-            if (errorSetting.Content == "Verbose")
+            if (errorSetting.Content.ToString() == "Verbose")
             {
                 GlobalFFOptions.Configure(new FFOptions { BinaryFolder = "./Dependencies", TemporaryFilesFolder = "/Logs", LogLevel = FFMpegLogLevel.Verbose });
             }
@@ -168,6 +159,9 @@ namespace VinesauceVODClipper
 
         private void ExportTsvFile(string tsvPath)
         {
+            if (string.IsNullOrEmpty(tsvPath))
+                return;
+
             if (!tsvPath.ToLower().EndsWith(".tsv"))
                 tsvPath += ".tsv";
 
@@ -237,6 +231,7 @@ namespace VinesauceVODClipper
         private void CreateClips(ObservableCollection<DataGridItem> items)
         {
             ComboBoxItem timeStampMode = (ComboBoxItem)_TimeStampModeComboBox.SelectedItem;
+            string logFilePath = System.IO.Path.Combine("./Logs", $"ffmpeg_log_{DateTime.Now:yyyyMMdd_HHmmss}.txt");
 
             int successCount = 0;
             int failureCount = 0;
@@ -256,21 +251,19 @@ namespace VinesauceVODClipper
                     string outputPath = System.IO.Path.Combine(outputDir, outputFileName + extension);
 
                     // Create Clip
-                    StringBuilder logBuilder = new StringBuilder();
+                    string arguments = "";
 
                     try
-                    {       
+                    {
                         var args = FFMpegArguments
                         .FromFileInput(items[i].Path, true, options => options
                             .Seek(items[i].StartTime)
                             .WithCustomArgument($"-to {items[i].EndTime}"))
                         .OutputToFile(outputPath, true, options => options
-                            .WithCustomArgument($"-map 0 -c copy -avoid_negative_ts {timeStampMode.Content}"))
-                        .NotifyOnOutput(line =>
-                        {
-                            logBuilder.AppendLine(line);
-                            LogText(line);
-                        });
+                            .WithCustomArgument($"-map 0 -c copy -avoid_negative_ts {timeStampMode.Content.ToString()}"));
+
+                        arguments = args.Arguments;
+
 
                         VerboseLogText($"Processing Clip {i + 1}/{items.Count} with arguments:\nffmpeg.exe {args.Arguments}");
 
@@ -282,7 +275,7 @@ namespace VinesauceVODClipper
                         else
                             failureCount++;
                     }
-                    catch (Exception e) { LogText($"[ERROR] An exception has occured: {e.Message}"); failureCount++; }
+                    catch (Exception e) { LogText($"[ERROR] An exception has occured: {e.Message}"); File.WriteAllText(logFilePath, $"{arguments}\n\n{e.Message}"); failureCount++; }
                 }
                 else
                     failureCount++;
@@ -294,7 +287,7 @@ namespace VinesauceVODClipper
         private void VerboseLogText(string text)
         {
             ComboBoxItem errorSetting = (ComboBoxItem)_LogDetailComboBox.SelectedItem;
-            if (errorSetting.Content == "Verbose")
+            if (errorSetting.Content.ToString() == "Verbose")
                 LogText(text);
         }
 
@@ -310,9 +303,9 @@ namespace VinesauceVODClipper
                 return false;
             }
 
-            if (clipLengthSeconds <= 5)
+            if (clipLengthSeconds <= 2)
             {
-                LogText($"Error! Timespan needs to be 5 seconds or longer for [Row {index}]: Currently \"{clipLengthSeconds}\" seconds. Skipping export of \"{outputFileName}\"...");
+                LogText($"Error! Timespan needs to be 2 seconds or longer for [Row {index}]: Currently \"{clipLengthSeconds}\" seconds. Skipping export of \"{outputFileName}\"...");
                 return false;
             }
 
