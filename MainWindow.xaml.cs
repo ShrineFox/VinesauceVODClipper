@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using System.Collections.ObjectModel;
 using FFMpegCore;
 using FFMpegCore.Enums;
+using System.Diagnostics;
 
 namespace VinesauceVODClipper
 {
@@ -402,12 +403,16 @@ namespace VinesauceVODClipper
 
         private void MoveSelectedRowsDown()
         {
-            var indexBelow = selectedRowIDs[selectedRowIDs.Count - 1] + 1;
-            if (indexBelow >= viewModel.DataGridItems.Count) return;
-            var itemBelow = viewModel.DataGridItems[indexBelow];
-            viewModel.DataGridItems.RemoveAt(indexBelow);
-            var indexAbove = selectedRowIDs[0] - 1;
-            viewModel.DataGridItems.Insert(indexAbove + 1, itemBelow);
+            try
+            {
+                var indexBelow = selectedRowIDs[selectedRowIDs.Count - 1] + 1;
+                if (indexBelow >= viewModel.DataGridItems.Count) return;
+                var itemBelow = viewModel.DataGridItems[indexBelow];
+                viewModel.DataGridItems.RemoveAt(indexBelow);
+                var indexAbove = selectedRowIDs[0] - 1;
+                viewModel.DataGridItems.Insert(indexAbove + 1, itemBelow);
+            }
+            catch { }
         }
 
         private void DataGridContextMenu_Add(object sender, EventArgs e)
@@ -568,6 +573,16 @@ namespace VinesauceVODClipper
             {
                 MoveFocusToCellBelow();
             }
+        }
+
+        private void About_Click(object sender, EventArgs e)
+        {
+            string url = "https://github.com/ShrineFox/VinesauceVODClipper#vinesaucevodclipper";
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            });
         }
     }
 }

@@ -9,13 +9,20 @@
         <Setter Property="Padding" Value="0" />
         <Setter Property="BorderThickness" Value="0" />
 
+        <Setter Property="HeaderTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding}" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+
         <Style.Triggers>
             <Trigger Property="IsHighlighted" Value="True">
                 <Setter Property="Background" Value="#FF68FF6A"/>
                 <Setter Property="Foreground" Value="Black" />
             </Trigger>
         </Style.Triggers>
-        
     </Style>
 
 
