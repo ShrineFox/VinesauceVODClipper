@@ -1,0 +1,212 @@
+﻿<Window x:Name="FullSauceTheme" x:Class="VinesauceVODClipper.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VinesauceVODClipper" xmlns:control="clr-namespace:VinesauceVODClipper.Controls"
+        mc:Ignorable="d"
+        Title="VinesauceVODClipper 1.3" Height="450" Width="800" BorderBrush="#FF68BA6A" Foreground="White" Icon="/Dependencies/vineshroom.ico">
+    <Window.Resources>
+        <!-- DECLARING MERGED DICTIONARY -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source='Styles/ButtonCustomStyle.xaml' />
+                <ResourceDictionary Source='Styles/ComboBoxCustomStyle.xaml' />
+                <ResourceDictionary Source='Styles/DataGridCustomStyle.xaml' />
+                <ResourceDictionary Source='Styles/GroupBoxCustomStyle.xaml' />
+                <ResourceDictionary Source='Styles/MenuItemCustomStyle.xaml' />
+                <ResourceDictionary Source='Styles/RichTextBoxCustomStyle.xaml' />
+                <ResourceDictionary Source='Styles/TextBoxCustomStyle.xaml' />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF68BA6A"/>
+            <GradientStop Color="#FF2C3592" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/Dependencies/VineShroomBg.png" Stretch="UniformToFill" Opacity="0.25"/>
+        </Grid.Background>
+        <DockPanel>
+            <!--Menustrip-->
+            <Menu DockPanel.Dock="Top" Background="#FF68BA6A" Foreground="White">
+                <MenuItem Header="File" Margin="5">
+                    <MenuItem.Icon>
+                        <Image Source="/Dependencies/page.png" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                    <MenuItem Header="New Video List" Click="NewList_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Dependencies/asterisk_yellow.png" Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Import Video List" Click="ImportList_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Dependencies/page_add.png" Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Export Video List" Click="ExportList_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Dependencies/disk.png" Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                
+                <MenuItem Header="Edit" Margin="5">
+                    <MenuItem.Icon>
+                        <Image Source="/Dependencies/page_edit.png" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                    <MenuItem Header="Add Row" Click="StackPanelContextMenu_Add">
+                        <MenuItem.Icon>
+                            <Image Source="/Dependencies/add.png" Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+
+                <MenuItem Header="Options" Margin="5">
+                    <MenuItem.Icon>
+                        <Image Source="/Dependencies/cog.png" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Avoid Negative Timestamps: " VerticalAlignment="Center" Foreground="White" Background="#FF68BA6A"/>
+                                <ComboBox Name="_TimeStampModeComboBox" Width="150" SelectedIndex="0" >
+                                    <ComboBoxItem Content="make_zero" BorderThickness="0"/>
+                                    <ComboBoxItem Content="make_non_negative" BorderThickness="0"/>
+                                    <ComboBoxItem Content="auto" BorderThickness="0"/>
+                                    <ComboBoxItem Content="disabled" BorderThickness="0"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Log Detail: " VerticalAlignment="Center" Foreground="White" Background="#FF68BA6A"/>
+                                <ComboBox Name="_LogDetailComboBox" Width="150" SelectedIndex="0" SelectionChanged="LogDetailComboBox_SelectionChanged" >
+                                    <ComboBoxItem Content="Verbose" BorderThickness="0"/>
+                                    <ComboBoxItem Content="Error" BorderThickness="0"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                </MenuItem>
+
+                <MenuItem Header="Help" Margin="5">
+                    <MenuItem.Icon>
+                        <Image Source="/Dependencies/information.png" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                    <MenuItem Header="About VinesauceVODClipper" Click="About_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Dependencies/world_go.png" Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+
+            <!--Form Contents-->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5*" MinHeight="25" Name="_UserInputArea" />
+                    <RowDefinition Height="Auto" Name="_GrabberArea" />
+                    <RowDefinition Height="*" MinHeight="25" Name="_LogArea" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60" MinHeight="60" Name="_ClipsFolderArea" />
+                        <RowDefinition Height="*" MinHeight="25" Name="_VideoClipsArea" />
+                    </Grid.RowDefinitions>
+                    <!--Output Clips Folder Browser-->
+                    <GroupBox Header="_Output Clips Folder" Grid.Row="0" Grid.ColumnSpan="2">
+                        <control:BrowseField x:Name="OutputDirBrowseField"/>
+                    </GroupBox>
+                    <GroupBox Header="_Videos To Generate Clips From" Grid.Row="1" Grid.ColumnSpan="2">
+                        <DockPanel>
+                            <!--Main DataGrid-->
+                            <DataGrid Name="_VideosDataGrid" DockPanel.Dock="Top" PreviewKeyDown="DataGrid_PreviewKeyDown"
+                                    HorizontalAlignment="Stretch" ScrollViewer.PanningMode="VerticalFirst"
+                                    VerticalAlignment="Top" ItemsSource="{Binding DataGridItems}" 
+                                    CanUserAddRows="False" AutoGenerateColumns="False" 
+                                    Background="Transparent" BorderBrush="Transparent" MouseRightButtonUp="DataGrid_RightClick"
+                                    LoadingRow="DataGrid_LoadingRow" AllowDrop="True" Drop="DataGrid_Drop">
+                                <DataGrid.Resources>
+                                    <DataTemplate x:Key="BrowseTemplate">
+                                        <control:BrowseField 
+                                        ButtonClicked="VideoGridBrowseField_ButtonClicked" 
+                                        Text="{Binding Path, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        TextChanged="VideoGridBrowseField_TextChanged" AllowDrop="True" />
+                                    </DataTemplate>
+                                    <ContextMenu x:Key="dataGridContextMenu" StaysOpen="true">
+                                        <MenuItem Header="Move Up" Click="DataGridContextMenu_MoveUp">
+                                            <MenuItem.Icon>
+                                                <Image Source="/Dependencies/arrow_up.png" Width="16" Height="16"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Move Down" Click="DataGridContextMenu_MoveDown">
+                                            <MenuItem.Icon>
+                                                <Image Source="/Dependencies/arrow_down.png" Width="16" Height="16"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Add" Click="DataGridContextMenu_Add">
+                                            <MenuItem.Icon>
+                                                <Image Source="/Dependencies/add.png" Width="16" Height="16"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Duplicate" Click="DataGridContextMenu_Duplicate">
+                                            <MenuItem.Icon>
+                                                <Image Source="/Dependencies/page_copy.png" Width="16" Height="16"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Delete" Click="DataGridContextMenu_Delete">
+                                            <MenuItem.Icon>
+                                                <Image Source="/Dependencies/delete.png" Width="16" Height="16"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </DataGrid.Resources>
+
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="4*"/>
+                                    <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*"/>
+                                    <DataGridTemplateColumn Header="Path" Width="2*" CellTemplate="{StaticResource BrowseTemplate}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Start Time" Binding="{Binding StartTime}" MinWidth="80"/>
+                                    <DataGridTextColumn Header="End Time" Binding="{Binding EndTime}" MinWidth="80"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <StackPanel Name ="_VideosStackPanel" MouseRightButtonUp="StackPanel_RightClick" DockPanel.Dock="Bottom" Background="#00C52C2C">
+                                <StackPanel.Resources>
+                                    <ContextMenu x:Key="stackPanelContextMenu" StaysOpen="true">
+                                        <MenuItem Header="Add" Click="StackPanelContextMenu_Add">
+                                            <MenuItem.Icon>
+                                                <Image Source="/Dependencies/add.png" Width="16" Height="16"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </StackPanel.Resources>
+                            </StackPanel>
+                        </DockPanel>
+                    </GroupBox>
+                </Grid>
+                <GridSplitter Grid.Row="1" Height="5" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ResizeDirection="Rows" Background="Transparent" />
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*" MinWidth="75" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Header="_Log" Grid.Column="0" Margin="5,0,0,5">
+                        <RichTextBox Name="_Log" MinHeight="50" Foreground="White" Background="Transparent" BorderBrush="Transparent" VerticalScrollBarVisibility="Visible" IsReadOnly="True"  />
+                    </GroupBox>
+                    <Button Name="CreateClipsBtn" Grid.Column="1" BorderBrush="White" Click="CreateClipsBtn_Click">
+                        Create Clips
+                    </Button>
+                </Grid>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>

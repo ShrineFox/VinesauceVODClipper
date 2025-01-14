@@ -1,0 +1,79 @@
+<ResourceDictionary x:Class="VinesauceVODClipper.DataGridCustomStyle"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Style TargetType="{x:Type DataGridColumnHeader}">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <Style TargetType="{x:Type DataGridRowHeader}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <Style TargetType="{x:Type DataGrid}">
+        <EventSetter Event="GotFocus" Handler="DataGridCell_GotFocus" />
+        <Setter Property="AlternationCount" Value="2"/>
+        <Setter Property="GridLinesVisibility" Value="None"/>
+        <Setter Property="RowStyle" >
+            <Setter.Value>
+                <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Trigger>
+
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF68BA6A"/>
+                                        <GradientStop Color="#7F2C3691" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+
+                        <Trigger Property="AlternationIndex" Value="1">
+                            <Setter Property="Background" Value="#13000000"/>
+                        </Trigger>
+                    </Style.Triggers>
+
+                </Style>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="CellStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#5F68BA6A"/>
+                        </Trigger>
+
+                        <DataTrigger Binding="{Binding IsKeyboardFocusWithin, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Value="False">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                        </DataTrigger>
+
+                        <Trigger Property="IsEditing" Value="True">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridCell">
+                                        <TextBox Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Content.Text, Mode=TwoWay, UpdateSourceTrigger=Default}"
+												 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="0" BorderThickness="0" Background="#8F68BA6A"/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

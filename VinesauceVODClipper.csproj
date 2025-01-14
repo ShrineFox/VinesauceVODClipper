@@ -4,26 +4,58 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationIcon>vineshroom.ico</ApplicationIcon>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Dependencies\vineshroom.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="vineshroom.ico" />
+    <None Remove="Dependencies\add.png" />
+    <None Remove="Dependencies\arrow_down.png" />
+    <None Remove="Dependencies\arrow_up.png" />
+    <None Remove="Dependencies\asterisk_yellow.png" />
+    <None Remove="Dependencies\cog.png" />
+    <None Remove="Dependencies\delete.png" />
+    <None Remove="Dependencies\disk.png" />
+    <None Remove="Dependencies\information.png" />
+    <None Remove="Dependencies\new.png" />
+    <None Remove="Dependencies\page.png" />
+    <None Remove="Dependencies\page_add.png" />
+    <None Remove="Dependencies\page_copy.png" />
+    <None Remove="Dependencies\page_edit.png" />
+    <None Remove="Dependencies\VineShroomBg.png" />
+    <None Remove="Dependencies\world_go.png" />
+    <None Remove="vineshroom.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FFMpegCore" Version="5.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Dependencies\add.png" />
+    <Resource Include="Dependencies\arrow_down.png" />
+    <Resource Include="Dependencies\arrow_up.png" />
+    <Resource Include="Dependencies\asterisk_yellow.png" />
+    <Resource Include="Dependencies\cog.png" />
+    <Resource Include="Dependencies\delete.png" />
+    <Resource Include="Dependencies\disk.png" />
+    <Resource Include="Dependencies\information.png" />
+    <Resource Include="Dependencies\page.png" />
+    <Resource Include="Dependencies\page_add.png" />
+    <Resource Include="Dependencies\page_copy.png" />
+    <Resource Include="Dependencies\page_edit.png" />
+    <Resource Include="Dependencies\VineShroomBg.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Dependencies\vineshroom.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Dependencies\world_go.png" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ShrineFox.IO\ShrineFox.IO.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Dependencies\ffmpeg.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Dependencies\Place ffmpeg.exe here.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

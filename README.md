@@ -1,6 +1,27 @@
 # VinesauceVODClipper
-![VinesauceVODClipper screenshot](https://i.imgur.com/AoGrSF5.png)
-Yet another ffmpeg wrapper. Uses a ``.txt`` file with timestamps to make shortened copies of videos without re-encoding! Perfect for saving hard drive space and time spent uploading/downloading full VODs-- all without sacrificing quality.
+![VinesauceVODClipper screenshot](https://i.imgur.com/fAHgZBd.png)
+When you're working with a remote team of video editors, sharing full, uncompressed VODs with your team can allow for the best picture quality. However, these VODs are time consuming to upload and download, and take up a lot of space.  
+Fortunately, this tool can improve efficiency by allowing you to create short clips from source VODs without sacrificing quality.
+
+# How It Works
+## Step 1: Creating a Spreadsheet
+When you start this program, you'll see a table with the rows: Title, Description, Path, Start Time and End Time.  
+1. Fill out each row with the following information. Right click to Add rows (as well as to delete/copy/move rows if needed).
+- **Title**: The name of the video you need a shortened clip of. Can be approximate as long as it's clear which video you want.
+- **Description**: More context about the clip. This will be added to the clip filename (``Title - Description.mp4``).
+- **Path**: The location of the source VOD matching this video. If you don't have it, leave this blank for now.
+- **Start Time**: The timestamp in ``hours:minutes:seconds`` where your clip should start.
+- **End Time**: The timestamp where your clip should end.
+2. Once you have filled out all the rows, you can go to ``File > Export Video List`` to create a ``.tsv`` file.  
+3. Share this ``.tsv`` file with whoever on your team has the VODs, and they can open it up in the program and proceed to the next step.  
+(Note: You can use Google Sheets to create a video list if you prefer. [See here for an example](https://docs.google.com/spreadsheets/d/1v_gcjeCJdvKBjW9T7VtK6jKoQ3QgIJuNCm-iGKhNiiw/edit?usp=sharing).
+## Step 2: Assigning Source VODs
+1. If you have the VODs and a list of videos, start the program and go to ``File > Import Video List`` to load the ``.tsv`` file.
+2. Next, drag the video file for each VOD that matches the requested video onto the table row. It should automatically fill in the Path.
+3. Once each video has a Path assigned, click **Create Clips** and they should appear in your Clips folder.  
+(Note: If you didn't assign a clips folder, an Output folder will be created next to the program's ``.exe`` file.)
+## Step 3: Upload the Clips
+Now that you have the shortened clips, you can share them with your team via Google Drive or the file host of your choice.
 
 # Download
 You can get the latest version of this program from the [Releases](https://github.com/ShrineFox/VinesauceVODClipper/releases) page.  
@@ -10,34 +31,21 @@ Just extract the ``.zip`` anywhere on your PC and run the ``.exe``.
 - Install the [.NET 8.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-8.0.11-windows-x64-installer).
 - Place [ffmpeg.exe](https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip) in the program's ``Dependencies/`` folder.
 
-# Usage
-## Creating a .txt file
-On each line of the ``.txt`` file, put the name of the video. At the end, put the start and end timestamps of the clip. For example:
-```
-[Vinesauce] Vinny & Friends - VRChat #6 45:10 48:40
-Vinny - Mario 64 in Minecraft, Sonic, Doom, TF2, Blender, etc.. 1:12:00 1:13:26
-[Vinesauce] Vinny - Mario & Luigi: Superstar Saga (part 1) 1:02:49 1:05:00
-[Vinesauce] Vinny - Quick GameCube Corruptions 46:02 49:20
-[Vinesauce] Vinny - Red Dead Redemption 2 (part 21) 1:05:14 1:06:26
-```
-## Creating clips
-- Launch the program
-- Choose your ``.txt`` file. This will load the list of video names and timestamps.
-- For each video name, assign a video file. This can be done quickly by dragging the file onto the video name.
-- Choose an output folder for your clips.
-- Click the "Create clips" button to generate clips!
-- Upload the clips to Google Drive and then you're done.
+# Keyboard Shortcuts
+- **Delete**: Delete the currently selected row(s) from the table.
+- **CTRL+Up Arrow**: Move the currently selected row(s) up one row.
+- **CTRL+Down Arrow**: Move the currently selected row(s) down one row.
 
-## How it works
-Basically, ffmpeg snips all the audio and video tracks between the specified timestamps and saves them to a new file. The data is more or less unaltered, thus preserving video quality.  
-This doesn't always work perfectly due to missing I-Frames in the beginning of the video, so the first second or two may appear blank, glitched, or frozen. You can account for this by providing starting timestamps that are **slightly earlier in the video** than you actually need.
-
-## Re-encoding clips
-If for some reason editing software still doesn't play friendly with the clip, you can try re-encoding it using the ``Tools > Re-Encode Clips`` option. Note that there may possibly be quality loss as a result.
-
+# Options
 ## Avoid Negative Timestamps 
-Some video editors/players will expect the original length of the video, causing the clip to appear much longer than it is. By default, this program tries to correct that by setting the "Avoid Negative Timestamps" setting to "make zero." You can change the mode by hovering over ``Tools > Avoid Negative Timestamps`` and choosing from the following:  
+Some video editors/players will expect the original length of the video, causing the clip to appear much longer than it is. By default, this program tries to correct that by setting the "Avoid Negative Timestamps" setting to ``make_zero``. You can change the mode by hovering over ``Options > Avoid Negative Timestamps`` and choosing from the following:  
 - ``make_non_negative`` shifts timestamps to make them non-negative.
 - ``make_zero`` shifts timestamps so that the first timestamp is ``0``.
 - ``auto`` enables shifting when required by the target format.  
-Using this setting may cause audio/video tracks to become slightly desynced from one another. This can be manually corrected in i.e. Adobe Premiere by right clicking and unlinking the tracks, and then moving them manually until they align again. However, if accuracy is a concern, you may want to disable this setting by unchecking the checkbox.
+- ``disabled`` avoids using this setting.  
+  
+Using this setting may cause audio/video tracks to become slightly desynced from one another. This can be manually corrected in i.e. Adobe Premiere by right clicking and unlinking the tracks, and then moving them manually until they align again. However, if accuracy is a concern, you may want to disable this setting.
+
+## Error Logging
+By default, it's set to "verbose" which will show you the ``ffmpeg`` arguments the program is using in order to generate clips. This may be helpful for debugging if something goes wrong, but if you prefer a less wordy output log, you can set it to ``Error`` to only show this information when an error occurs.  
+Also, a folder called ``Logs`` should appear next to the program's ``.exe`` file, where you can find the ``.txt`` files that are generated whenever ffmpeg throws an exception.

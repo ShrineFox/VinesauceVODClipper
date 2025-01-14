@@ -1,0 +1,18 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style TargetType="{x:Type TextBox}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF68BA6A"/>
+                    <GradientStop Color="#7F2C3691" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Height" Value="20" />
+        <Setter Property="MinHeight" Value="20" />
+        <Setter Property="BorderBrush" Value="#FF2C3691" />
+        <Setter Property="Margin" Value="5,0,5,0" />
+    </Style>
+</ResourceDictionary>
