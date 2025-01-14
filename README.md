@@ -14,7 +14,7 @@ When you start this program, you'll see a table with the rows: Title, Descriptio
 - **End Time**: The timestamp where your clip should end.
 2. Once you have filled out all the rows, you can go to ``File > Export Video List`` to create a ``.tsv`` file.  
 3. Share this ``.tsv`` file with whoever on your team has the VODs, and they can open it up in the program and proceed to the next step.  
-(Note: You can use Google Sheets to create a video list if you prefer. See here for an example.)
+(Note: You can use Google Sheets to create a video list if you prefer. [See here for an example](https://docs.google.com/spreadsheets/d/1v_gcjeCJdvKBjW9T7VtK6jKoQ3QgIJuNCm-iGKhNiiw/edit?usp=sharing).
 ## Step 2: Assigning Source VODs
 1. If you have the VODs and a list of videos, start the program and go to ``File > Import Video List`` to load the ``.tsv`` file.
 2. Next, drag the video file for each VOD that matches the requested video onto the table row. It should automatically fill in the Path.
