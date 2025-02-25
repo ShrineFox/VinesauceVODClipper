@@ -250,9 +250,22 @@ namespace VinesauceVODClipper
                     string outputFileName = $"{items[i].Title} - {items[i].Description}";
                     string extension = System.IO.Path.GetExtension(items[i].Path);
                     string outputPath = System.IO.Path.Combine(outputDir, outputFileName + extension);
+                    Directory.CreateDirectory(outputDir);
 
                     // Create Clip
                     string arguments = "";
+
+                    string customArgs = $"-map 0 -c copy -avoid_negative_ts {timeStampMode.Content.ToString()}";
+
+                    if ((bool)CheckBox_ReEncode.IsChecked)
+                    {
+                        // copy audio stream but re-encode video
+                        customArgs = $" -map 0 -c copy -c:v libx265";
+                        var scaleSetting = (ComboBoxItem)_ScaleVideoComboBox.SelectedItem;
+                        // change output scale of video
+                        if (scaleSetting.Content.ToString() != "default")
+                            customArgs += $" -vf \"scale={scaleSetting.Content.ToString()}\"";
+                    }
 
                     try
                     {
@@ -261,7 +274,7 @@ namespace VinesauceVODClipper
                             .Seek(items[i].StartTime)
                             .WithCustomArgument($"-to {items[i].EndTime}"))
                         .OutputToFile(outputPath, true, options => options
-                            .WithCustomArgument($"-map 0 -c copy -avoid_negative_ts {timeStampMode.Content.ToString()}"));
+                            .WithCustomArgument(customArgs));
 
                         arguments = args.Arguments;
 
